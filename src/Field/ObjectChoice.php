@@ -18,10 +18,11 @@ abstract class ObjectChoice extends Choice {
 	 * @param mixed $options   Select options.
 	 * @param mixed $db_fields Database fields to use in the output.
 	 * @param mixed $meta      Meta value.
+	 *
 	 * @return string
 	 */
 	public static function walk( $field, $options, $db_fields, $meta ) {
-		return call_user_func( array( self::get_type_class( $field ), 'walk' ), $field, $options, $db_fields, $meta );
+		return call_user_func( [ self::get_type_class( $field ), 'walk' ], $field, $options, $db_fields, $meta );
 	}
 
 	/**
@@ -33,11 +34,11 @@ abstract class ObjectChoice extends Choice {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'flatten'    => true,
-			'query_args' => array(),
+			'query_args' => [],
 			'field_type' => 'select_advanced',
-		) );
+		] );
 
 		if ( 'checkbox_tree' === $field['field_type'] ) {
 			$field['field_type'] = 'checkbox_list';
@@ -49,7 +50,8 @@ abstract class ObjectChoice extends Choice {
 		if ( 'checkbox_list' === $field['field_type'] ) {
 			$field['multiple'] = true;
 		}
-		return call_user_func( array( self::get_type_class( $field ), 'normalize' ), $field );
+
+		return call_user_func( [ self::get_type_class( $field ), 'normalize' ], $field );
 	}
 
 	/**
@@ -61,10 +63,11 @@ abstract class ObjectChoice extends Choice {
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
-		$attributes = call_user_func( array( self::get_type_class( $field ), 'get_attributes' ), $field, $value );
+		$attributes = call_user_func( [ self::get_type_class( $field ), 'get_attributes' ], $field, $value );
 		if ( 'select_advanced' === $field['field_type'] ) {
 			$attributes['class'] .= ' rwmb-select_advanced';
 		}
+
 		return $attributes;
 	}
 
@@ -74,11 +77,11 @@ abstract class ObjectChoice extends Choice {
 	 * @return array
 	 */
 	public static function get_db_fields() {
-		return array(
+		return [
 			'parent' => '',
 			'id'     => '',
 			'label'  => '',
-		);
+		];
 	}
 
 	/**
@@ -95,14 +98,16 @@ abstract class ObjectChoice extends Choice {
 	 * Get correct rendering class for the field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	protected static function get_type_class( $field ) {
-		if ( in_array( $field['field_type'], array( 'checkbox_list', 'radio_list' ), true ) ) {
+		if ( in_array( $field['field_type'], [ 'checkbox_list', 'radio_list' ], true ) ) {
 			return 'Input_List';
 		}
-		return self::get_class_name( array(
+
+		return self::get_class_name( [
 			'type' => $field['field_type'],
-		) );
+		] );
 	}
 }

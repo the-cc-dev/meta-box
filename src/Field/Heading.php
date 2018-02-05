@@ -15,7 +15,7 @@ class Heading extends Base {
 	 * Enqueue scripts and styles.
 	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'rwmb-heading', RWMB_CSS_URL . 'heading.css', array(), RWMB_VER );
+		wp_enqueue_style( 'rwmb-heading', RWMB_CSS_URL . 'heading.css', [], RWMB_VER );
 	}
 
 	/**
@@ -28,6 +28,7 @@ class Heading extends Base {
 	 */
 	public static function begin_html( $meta, $field ) {
 		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
+
 		return sprintf( '<h4%s>%s</h4>', $attributes, $field['name'] );
 	}
 

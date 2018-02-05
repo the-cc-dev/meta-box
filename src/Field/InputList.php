@@ -15,8 +15,8 @@ class InputList extends Choice {
 	 * Enqueue scripts and styles
 	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'rwmb-input-list', RWMB_CSS_URL . 'input-list.css', array(), RWMB_VER );
-		wp_enqueue_script( 'rwmb-input-list', RWMB_JS_URL . 'input-list.js', array(), RWMB_VER, true );
+		wp_enqueue_style( 'rwmb-input-list', RWMB_CSS_URL . 'input-list.css', [], RWMB_VER );
+		wp_enqueue_script( 'rwmb-input-list', RWMB_JS_URL . 'input-list.js', [], RWMB_VER, true );
 	}
 
 	/**
@@ -46,20 +46,21 @@ class InputList extends Choice {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
 		$field = $field['multiple'] ? MultipleValues::normalize( $field ) : $field;
 		$field = Input::normalize( $field );
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'collapse'        => true,
 			'inline'          => null,
 			'select_all_none' => false,
-		) );
+		] );
 
 		$field['flatten'] = $field['multiple'] ? $field['flatten'] : true;
-		$field['inline'] = ! $field['multiple'] && ! isset( $field['inline'] ) ? true : $field['inline'];
+		$field['inline']  = ! $field['multiple'] && ! isset( $field['inline'] ) ? true : $field['inline'];
 
 		return $field;
 	}
@@ -73,10 +74,10 @@ class InputList extends Choice {
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
-		$attributes           = Input::get_attributes( $field, $value );
-		$attributes['id']     = false;
-		$attributes['type']   = $field['multiple'] ? 'checkbox' : 'radio';
-		$attributes['value']  = $value;
+		$attributes          = Input::get_attributes( $field, $value );
+		$attributes['id']    = false;
+		$attributes['type']  = $field['multiple'] ? 'checkbox' : 'radio';
+		$attributes['value'] = $value;
 
 		return $attributes;
 	}
@@ -85,12 +86,14 @@ class InputList extends Choice {
 	 * Get html for select all|none for multiple checkbox.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function get_select_all_html( $field ) {
 		if ( $field['multiple'] && $field['select_all_none'] ) {
 			return sprintf( '<p><button class="rwmb-input-list-select-all-none button" data-name="%s">%s</button></p>', $field['id'], __( 'Select All / None', 'meta-box' ) );
 		}
+
 		return '';
 	}
 }

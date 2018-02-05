@@ -54,11 +54,11 @@ class Switcher extends Input {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'style'     => 'rounded',
 			'on_label'  => '',
 			'off_label' => '',
-		) );
+		] );
 
 		return $field;
 	}
@@ -91,6 +91,7 @@ class Switcher extends Input {
 	public static function format_single_value( $field, $value, $args, $post_id ) {
 		$on  = $field['on_label'] ? $field['on_label'] : __( 'On', 'meta-box' );
 		$off = $field['off_label'] ? $field['on_label'] : __( 'Off', 'meta-box' );
+
 		return $value ? $on : $off;
 	}
 }

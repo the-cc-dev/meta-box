@@ -15,7 +15,7 @@ if ( ! function_exists( 'rwmb_meta' ) ) {
 	 *
 	 * @return mixed
 	 */
-	function rwmb_meta( $key, $args = array(), $post_id = null ) {
+	function rwmb_meta( $key, $args = [], $post_id = null ) {
 		$args  = wp_parse_args( $args );
 		$field = rwmb_get_field_data( $key, $args, $post_id );
 
@@ -26,9 +26,10 @@ if ( ! function_exists( 'rwmb_meta' ) ) {
 		if ( false === $field ) {
 			return apply_filters( 'rwmb_meta', rwmb_meta_legacy( $key, $args, $post_id ) );
 		}
-		$meta = in_array( $field['type'], array( 'oembed', 'map' ), true ) ?
+		$meta = in_array( $field['type'], [ 'oembed', 'map' ], true ) ?
 			rwmb_the_value( $key, $args, $post_id, false ) :
 			rwmb_get_value( $key, $args, $post_id );
+
 		return apply_filters( 'rwmb_meta', $meta, $key, $args, $post_id );
 	}
 }
@@ -43,10 +44,10 @@ if ( ! function_exists( 'rwmb_get_field_data' ) ) {
 	 *
 	 * @return array
 	 */
-	function rwmb_get_field_data( $key, $args = array(), $object_id = null ) {
-		$args = wp_parse_args( $args, array(
+	function rwmb_get_field_data( $key, $args = [], $object_id = null ) {
+		$args = wp_parse_args( $args, [
 			'object_type' => 'post',
-		) );
+		] );
 		$type = get_post_type( $object_id );
 
 		/**
@@ -72,18 +73,18 @@ if ( ! function_exists( 'rwmb_meta_legacy' ) ) {
 	 *
 	 * @return mixed
 	 */
-	function rwmb_meta_legacy( $key, $args = array(), $post_id = null ) {
-		$args  = wp_parse_args( $args, array(
+	function rwmb_meta_legacy( $key, $args = [], $post_id = null ) {
+		$args  = wp_parse_args( $args, [
 			'type'     => 'text',
 			'multiple' => false,
 			'clone'    => false,
-		) );
-		$field = array(
+		] );
+		$field = [
 			'id'       => $key,
 			'type'     => $args['type'],
 			'clone'    => $args['clone'],
 			'multiple' => $args['multiple'],
-		);
+		];
 
 		$method = 'get_value';
 		switch ( $args['type'] ) {
@@ -113,7 +114,7 @@ if ( ! function_exists( 'rwmb_get_value' ) ) {
 	 *
 	 * @return mixed false if field doesn't exist. Field value otherwise.
 	 */
-	function rwmb_get_value( $field_id, $args = array(), $post_id = null ) {
+	function rwmb_get_value( $field_id, $args = [], $post_id = null ) {
 		$args  = wp_parse_args( $args );
 		$field = rwmb_get_field_data( $field_id, $args, $post_id );
 
@@ -146,7 +147,7 @@ if ( ! function_exists( 'rwmb_the_value' ) ) {
 	 *
 	 * @return string
 	 */
-	function rwmb_the_value( $field_id, $args = array(), $post_id = null, $echo = true ) {
+	function rwmb_the_value( $field_id, $args = [], $post_id = null, $echo = true ) {
 		$args  = wp_parse_args( $args );
 		$field = rwmb_get_field_data( $field_id, $args, $post_id );
 
@@ -184,9 +185,9 @@ if ( ! function_exists( 'rwmb_meta_shortcode' ) ) {
 	 * @return string
 	 */
 	function rwmb_meta_shortcode( $atts ) {
-		$atts = wp_parse_args( $atts, array(
+		$atts = wp_parse_args( $atts, [
 			'post_id' => get_the_ID(),
-		) );
+		] );
 		if ( empty( $atts['meta_key'] ) ) {
 			return '';
 		}
@@ -211,9 +212,9 @@ if ( ! function_exists( 'rwmb_get_registry' ) ) {
 	 * @return object
 	 */
 	function rwmb_get_registry( $type ) {
-		static $data = array();
+		static $data = [];
 
-		$type  = str_replace( array( '-', '_' ), ' ', $type );
+		$type  = str_replace( [ '-', '_' ], ' ', $type );
 		$class = '\MetaBox\\' . ucwords( $type ) . 'Registry';
 		$class = str_replace( ' ', '', $class );
 		if ( ! isset( $data[ $type ] ) ) {
@@ -229,13 +230,14 @@ if ( ! function_exists( 'rwmb_get_storage_class_name' ) ) {
 	 * Get storage class name.
 	 *
 	 * @param string $object_type Object type. Use post or term.
+	 *
 	 * @return string
 	 */
 	function rwmb_get_storage_class_name( $object_type ) {
-		$object_type = str_replace( array( '-', '_' ), ' ', $object_type );
+		$object_type = str_replace( [ '-', '_' ], ' ', $object_type );
 		$object_type = ucwords( $object_type );
 		$object_type = str_replace( ' ', '_', $object_type );
-		$class_name = 'RWMB_' . $object_type . '_Storage';
+		$class_name  = 'RWMB_' . $object_type . '_Storage';
 
 		if ( ! class_exists( $class_name ) ) {
 			$class_name = 'RWMB_Post_Storage';
@@ -251,11 +253,12 @@ if ( ! function_exists( 'rwmb_get_storage' ) ) {
 	 *
 	 * @param string      $object_type Object type. Use post or term.
 	 * @param RW_Meta_Box $meta_box    Meta box object. Optional.
+	 *
 	 * @return RWMB_Storage_Interface
 	 */
 	function rwmb_get_storage( $object_type, $meta_box = null ) {
 		$class_name = rwmb_get_storage_class_name( $object_type );
-		$storage = rwmb_get_registry( 'storage' )->get( $class_name );
+		$storage    = rwmb_get_registry( 'storage' )->get( $class_name );
 
 		return apply_filters( 'rwmb_get_storage', $storage, $object_type, $meta_box );
 	}
@@ -266,6 +269,7 @@ if ( ! function_exists( 'rwmb_get_meta_box' ) ) {
 	 * Get meta box object from meta box data.
 	 *
 	 * @param  array $meta_box Array of meta box data.
+	 *
 	 * @return RW_Meta_Box
 	 */
 	function rwmb_get_meta_box( $meta_box ) {

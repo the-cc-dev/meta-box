@@ -18,7 +18,7 @@ class InputList extends Base {
 	 * @param int    $depth  Depth of the item.
 	 * @param array  $args   An array of additional arguments.
 	 */
-	public function start_lvl( &$output, $depth = 0, $args = array() ) {
+	public function start_lvl( &$output, $depth = 0, $args = [] ) {
 		$output .= '<ul class="rwmb-input-list">';
 	}
 
@@ -29,7 +29,7 @@ class InputList extends Base {
 	 * @param int    $depth  Depth of the item.
 	 * @param array  $args   An array of additional arguments.
 	 */
-	public function end_lvl( &$output, $depth = 0, $args = array() ) {
+	public function end_lvl( &$output, $depth = 0, $args = [] ) {
 		$output .= '</ul>';
 	}
 
@@ -42,7 +42,7 @@ class InputList extends Base {
 	 * @param array  $args              An array of additional arguments.
 	 * @param int    $current_object_id ID of the current item.
 	 */
-	public function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
+	public function start_el( &$output, $object, $depth = 0, $args = [], $current_object_id = 0 ) {
 		$label      = $this->db_fields['label'];
 		$id         = $this->db_fields['id'];
 		$attributes = RWMB_Field::call( 'get_attributes', $this->field, $object->$id );
@@ -63,7 +63,7 @@ class InputList extends Base {
 	 * @param int    $depth  Depth of the item.
 	 * @param array  $args   An array of additional arguments.
 	 */
-	public function end_el( &$output, $object, $depth = 0, $args = array() ) {
+	public function end_el( &$output, $object, $depth = 0, $args = [] ) {
 		$output .= '</li>';
 	}
 }

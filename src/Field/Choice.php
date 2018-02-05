@@ -18,6 +18,7 @@ abstract class Choice extends Base {
 	 * @param mixed $options   Select options.
 	 * @param mixed $db_fields Database fields to use in the output.
 	 * @param mixed $meta      Meta value.
+	 *
 	 * @return string
 	 */
 	public static function walk( $field, $options, $db_fields, $meta ) {
@@ -29,6 +30,7 @@ abstract class Choice extends Base {
 	 *
 	 * @param mixed $meta  Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
@@ -36,6 +38,7 @@ abstract class Choice extends Base {
 		$options   = self::call( 'get_options', $field );
 		$options   = self::call( 'filter_options', $field, $options );
 		$db_fields = self::call( 'get_db_fields', $field );
+
 		return ! empty( $options ) ? self::call( 'walk', $field, $options, $db_fields, $meta ) : null;
 	}
 
@@ -43,14 +46,15 @@ abstract class Choice extends Base {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'flatten' => true,
-			'options' => array(),
-		) );
+			'options' => [],
+		] );
 
 		return $field;
 	}
@@ -61,11 +65,11 @@ abstract class Choice extends Base {
 	 * @return array
 	 */
 	public static function get_db_fields() {
-		return array(
+		return [
 			'parent' => 'parent',
 			'id'     => 'value',
 			'label'  => 'label',
-		);
+		];
 	}
 
 	/**
@@ -76,16 +80,17 @@ abstract class Choice extends Base {
 	 * @return array
 	 */
 	public static function get_options( $field ) {
-		$options = array();
+		$options = [];
 		foreach ( (array) $field['options'] as $value => $label ) {
-			$option = is_array( $label ) ? $label : array(
+			$option = is_array( $label ) ? $label : [
 				'label' => (string) $label,
 				'value' => (string) $value,
-			);
+			];
 			if ( isset( $option['label'] ) && isset( $option['value'] ) ) {
 				$options[ $option['value'] ] = (object) $option;
 			}
 		}
+
 		return $options;
 	}
 
@@ -104,6 +109,7 @@ abstract class Choice extends Base {
 			$option         = apply_filters( 'rwmb_option', $option, $field );
 			$option->$label = apply_filters( 'rwmb_option_label', $option->$label, $option, $field );
 		}
+
 		return $options;
 	}
 
@@ -131,6 +137,7 @@ abstract class Choice extends Base {
 	 */
 	public static function get_option_label( $field, $value ) {
 		$options = self::call( 'get_options', $field );
+
 		return isset( $options[ $value ] ) ? $options[ $value ]->label : '';
 	}
 }

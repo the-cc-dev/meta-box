@@ -20,7 +20,7 @@ class TextList extends MultipleValues {
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
-		$html  = array();
+		$html  = [];
 		$input = '<label><input type="text" class="rwmb-text-list" name="%s" value="%s" placeholder="%s"> %s</label>';
 
 		$count = 0;
@@ -63,6 +63,7 @@ class TextList extends MultipleValues {
 			}
 		}
 		$output .= '</tbody></table>';
+
 		return $output;
 	}
 
@@ -82,6 +83,7 @@ class TextList extends MultipleValues {
 			$output .= "<td>$subvalue</td>";
 		}
 		$output .= '</tr>';
+
 		return $output;
 	}
 
@@ -96,6 +98,6 @@ class TextList extends MultipleValues {
 	public static function save( $new, $old, $post_id, $field ) {
 		$storage = $field['storage'];
 		$storage->delete( $post_id, $field['id'] );
-		parent::save( $new, array(), $post_id, $field );
+		parent::save( $new, [], $post_id, $field );
 	}
 }

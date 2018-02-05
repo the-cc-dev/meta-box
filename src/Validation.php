@@ -16,8 +16,8 @@ class Validation {
 	 * Add hooks when module is loaded.
 	 */
 	public function __construct() {
-		add_action( 'rwmb_after', array( $this, 'rules' ) );
-		add_action( 'rwmb_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'rwmb_after', [ $this, 'rules' ] );
+		add_action( 'rwmb_enqueue_scripts', [ $this, 'enqueue' ] );
 	}
 
 	/**
@@ -41,12 +41,15 @@ class Validation {
 		if ( empty( $object->meta_box['validation'] ) ) {
 			return;
 		}
-		wp_enqueue_script( 'jquery-validation', RWMB_JS_URL . 'jquery-validation/jquery.validate.min.js', array( 'jquery' ), '1.15.0', true );
-		wp_enqueue_script( 'jquery-validation-additional-methods', RWMB_JS_URL . 'jquery-validation/additional-methods.min.js', array( 'jquery-validation' ), '1.15.0', true );
-		wp_enqueue_script( 'rwmb-validate', RWMB_JS_URL . 'validate.js', array( 'jquery-validation', 'jquery-validation-additional-methods' ), RWMB_VER, true );
+		wp_enqueue_script( 'jquery-validation', RWMB_JS_URL . 'jquery-validation/jquery.validate.min.js', [ 'jquery' ], '1.15.0', true );
+		wp_enqueue_script( 'jquery-validation-additional-methods', RWMB_JS_URL . 'jquery-validation/additional-methods.min.js', [ 'jquery-validation' ], '1.15.0', true );
+		wp_enqueue_script( 'rwmb-validate', RWMB_JS_URL . 'validate.js', [
+			'jquery-validation',
+			'jquery-validation-additional-methods',
+		], RWMB_VER, true );
 
-		RWMB_Field::localize_script( 'rwmb-validate', 'rwmbValidate', array(
+		RWMB_Field::localize_script( 'rwmb-validate', 'rwmbValidate', [
 			'summaryMessage' => esc_html__( 'Please correct the errors highlighted below and try again.', 'meta-box' ),
-		) );
+		] );
 	}
 }

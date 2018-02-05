@@ -19,9 +19,9 @@ class TaxonomyAdvanced extends Taxonomy {
 	 * @return array
 	 */
 	public static function normalize( $field ) {
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'clone' => false,
-		) );
+		] );
 
 		$clone          = $field['clone'];
 		$field          = parent::normalize( $field );
@@ -72,12 +72,12 @@ class TaxonomyAdvanced extends Taxonomy {
 	 *
 	 * @return mixed
 	 */
-	public static function raw_meta( $object_id, $field, $args = array() ) {
+	public static function raw_meta( $object_id, $field, $args = [] ) {
 		$args['single'] = true;
-		$meta = Base::raw_meta( $object_id, $field, $args );
+		$meta           = Base::raw_meta( $object_id, $field, $args );
 
 		if ( empty( $meta ) ) {
-			return $field['multiple'] ? array() : '';
+			return $field['multiple'] ? [] : '';
 		}
 		$meta = is_array( $meta ) ? array_map( 'wp_parse_id_list', $meta ) : wp_parse_id_list( $meta );
 		$meta = array_filter( $meta );
@@ -95,7 +95,7 @@ class TaxonomyAdvanced extends Taxonomy {
 	 *
 	 * @return array List of post term objects.
 	 */
-	public static function get_value( $field, $args = array(), $post_id = null ) {
+	public static function get_value( $field, $args = [], $post_id = null ) {
 		if ( ! $post_id ) {
 			$post_id = get_the_ID();
 		}
@@ -107,10 +107,10 @@ class TaxonomyAdvanced extends Taxonomy {
 		}
 
 		// Allow to pass more arguments to "get_terms".
-		$args  = wp_parse_args( array(
+		$args  = wp_parse_args( [
 			'include'    => $value,
 			'hide_empty' => false,
-		), $args );
+		], $args );
 		$value = get_terms( $field['taxonomy'], $args );
 
 		// Get single value if necessary.

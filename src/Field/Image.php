@@ -17,7 +17,7 @@ class Image extends File {
 	public static function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
 		wp_enqueue_media();
-		wp_enqueue_style( 'rwmb-image', RWMB_CSS_URL . 'image.css', array(), RWMB_VER );
+		wp_enqueue_style( 'rwmb-image', RWMB_CSS_URL . 'image.css', [], RWMB_VER );
 	}
 
 	/**
@@ -72,6 +72,7 @@ class Image extends File {
 		if ( ! empty( $args['link'] ) ) {
 			$output = sprintf( '<a href="%s" title="%s">%s</a>', esc_url( $value['full_url'] ), esc_attr( $value['title'] ), $output );
 		}
+
 		return $output;
 	}
 
@@ -83,18 +84,18 @@ class Image extends File {
 	 *
 	 * @return array|bool False if file not found. Array of image info on success.
 	 */
-	public static function file_info( $file, $args = array() ) {
+	public static function file_info( $file, $args = [] ) {
 		$path = get_attached_file( $file );
 		if ( ! $path ) {
 			return false;
 		}
 
-		$args       = wp_parse_args( $args, array(
+		$args       = wp_parse_args( $args, [
 			'size' => 'thumbnail',
-		) );
+		] );
 		$image      = wp_get_attachment_image_src( $file, $args['size'] );
 		$attachment = get_post( $file );
-		$info       = array(
+		$info       = [
 			'ID'          => $file,
 			'name'        => basename( $path ),
 			'path'        => $path,
@@ -104,7 +105,7 @@ class Image extends File {
 			'caption'     => $attachment->post_excerpt,
 			'description' => $attachment->post_content,
 			'alt'         => get_post_meta( $file, '_wp_attachment_image_alt', true ),
-		);
+		];
 		if ( function_exists( 'wp_get_attachment_image_srcset' ) ) {
 			$info['srcset'] = wp_get_attachment_image_srcset( $file );
 		}

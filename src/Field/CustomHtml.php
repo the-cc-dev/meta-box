@@ -22,8 +22,9 @@ class CustomHtml extends Base {
 	public static function html( $meta, $field ) {
 		$html = ! empty( $field['default'] ) ? $field['default'] : '';
 		if ( ! empty( $field['callback'] ) && is_callable( $field['callback'] ) ) {
-			$html = call_user_func_array( $field['callback'], array( $meta, $field ) );
+			$html = call_user_func_array( $field['callback'], [ $meta, $field ] );
 		}
+
 		return $html;
 	}
 }

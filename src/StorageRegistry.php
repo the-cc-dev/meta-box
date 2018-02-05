@@ -17,12 +17,13 @@ class StorageRegistry {
 	 *
 	 * @var array
 	 */
-	protected $storages = array();
+	protected $storages = [];
 
 	/**
 	 * Get storage instance.
 	 *
 	 * @param string $class_name Storage class name.
+	 *
 	 * @return RWMB_Storage_Interface
 	 */
 	public function get( $class_name ) {

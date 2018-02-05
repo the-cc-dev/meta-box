@@ -21,11 +21,11 @@ class Number extends Input {
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
 
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'step' => 1,
 			'min'  => 0,
 			'max'  => false,
-		) );
+		] );
 
 		return $field;
 	}
@@ -40,11 +40,12 @@ class Number extends Input {
 	 */
 	public static function get_attributes( $field, $value = null ) {
 		$attributes = parent::get_attributes( $field, $value );
-		$attributes = wp_parse_args( $attributes, array(
+		$attributes = wp_parse_args( $attributes, [
 			'step' => $field['step'],
 			'max'  => $field['max'],
 			'min'  => $field['min'],
-		) );
+		] );
+
 		return $attributes;
 	}
 }

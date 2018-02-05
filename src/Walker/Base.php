@@ -26,7 +26,7 @@ abstract class Base extends \Walker {
 	 * @access public
 	 * @var array
 	 */
-	public $meta = array();
+	public $meta = [];
 
 	/**
 	 * Constructor.
@@ -36,11 +36,11 @@ abstract class Base extends \Walker {
 	 * @param mixed $meta      Meta value.
 	 */
 	public function __construct( $db_fields, $field, $meta ) {
-		$this->db_fields = wp_parse_args( (array) $db_fields, array(
+		$this->db_fields = wp_parse_args( (array) $db_fields, [
 			'parent' => '',
 			'id'     => '',
 			'label'  => '',
-		) );
+		] );
 		$this->field     = $field;
 		$this->meta      = (array) $meta;
 	}

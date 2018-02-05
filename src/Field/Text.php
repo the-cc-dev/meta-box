@@ -15,16 +15,17 @@ class Text extends Input {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
 
-		$field = wp_parse_args( $field, array(
-			'size'        => 30,
-			'maxlength'   => false,
-			'pattern'     => false,
-		) );
+		$field = wp_parse_args( $field, [
+			'size'      => 30,
+			'maxlength' => false,
+			'pattern'   => false,
+		] );
 
 		return $field;
 	}
@@ -39,12 +40,12 @@ class Text extends Input {
 	 */
 	public static function get_attributes( $field, $value = null ) {
 		$attributes = parent::get_attributes( $field, $value );
-		$attributes = wp_parse_args( $attributes, array(
+		$attributes = wp_parse_args( $attributes, [
 			'size'        => $field['size'],
 			'maxlength'   => $field['maxlength'],
 			'pattern'     => $field['pattern'],
 			'placeholder' => $field['placeholder'],
-		) );
+		] );
 
 		return $attributes;
 	}

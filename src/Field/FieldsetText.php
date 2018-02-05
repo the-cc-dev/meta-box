@@ -20,7 +20,7 @@ class FieldsetText extends Text {
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
-		$html = array();
+		$html = [];
 		$tpl  = '<label>%s %s</label>';
 
 		foreach ( $field['options'] as $key => $label ) {
@@ -68,6 +68,7 @@ class FieldsetText extends Text {
 		$field['multiple']           = false;
 		$field['attributes']['id']   = false;
 		$field['attributes']['type'] = 'text';
+
 		return $field;
 	}
 
@@ -96,6 +97,7 @@ class FieldsetText extends Text {
 			}
 		}
 		$output .= '</tbody></table>';
+
 		return $output;
 	}
 
@@ -115,6 +117,7 @@ class FieldsetText extends Text {
 			$output .= "<td>$subvalue</td>";
 		}
 		$output .= '</tr>';
+
 		return $output;
 	}
 }

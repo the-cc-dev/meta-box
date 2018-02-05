@@ -32,12 +32,12 @@ class User extends ObjectChoice {
 		$field['placeholder'] = empty( $field['placeholder'] ) ? __( 'Select an user', 'meta-box' ) : $field['placeholder'];
 
 		// Set default query args.
-		$field['query_args'] = wp_parse_args( $field['query_args'], array(
+		$field['query_args'] = wp_parse_args( $field['query_args'], [
 			'orderby' => 'display_name',
 			'order'   => 'asc',
 			'role'    => '',
 			'fields'  => 'all',
-		) );
+		] );
 
 		return $field;
 	}
@@ -51,6 +51,7 @@ class User extends ObjectChoice {
 	 */
 	public static function get_options( $field ) {
 		$query = new WP_User_Query( $field['query_args'] );
+
 		return $query->get_results();
 	}
 
@@ -60,11 +61,11 @@ class User extends ObjectChoice {
 	 * @return array
 	 */
 	public static function get_db_fields() {
-		return array(
+		return [
 			'parent' => 'parent',
 			'id'     => 'ID',
 			'label'  => 'display_name',
-		);
+		];
 	}
 
 	/**
@@ -76,7 +77,8 @@ class User extends ObjectChoice {
 	 * @return string
 	 */
 	public static function get_option_label( $field, $value ) {
-		$user  = get_userdata( $value );
+		$user = get_userdata( $value );
+
 		return '<a href="' . get_author_posts_url( $value ) . '">' . $user->display_name . '</a>';
 	}
 }

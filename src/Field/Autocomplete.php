@@ -16,11 +16,11 @@ class Autocomplete extends MultipleValues {
 	 */
 	public static function admin_enqueue_scripts() {
 		wp_enqueue_style( 'rwmb-autocomplete', RWMB_CSS_URL . 'autocomplete.css', '', RWMB_VER );
-		wp_enqueue_script( 'rwmb-autocomplete', RWMB_JS_URL . 'autocomplete.js', array( 'jquery-ui-autocomplete' ), RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-autocomplete', RWMB_JS_URL . 'autocomplete.js', [ 'jquery-ui-autocomplete' ], RWMB_VER, true );
 
-		self::localize_script( 'rwmb-autocomplete', 'RWMB_Autocomplete', array(
+		self::localize_script( 'rwmb-autocomplete', 'RWMB_Autocomplete', [
 			'delete' => __( 'Delete', 'meta-box' ),
-		) );
+		] );
 	}
 
 	/**
@@ -28,23 +28,24 @@ class Autocomplete extends MultipleValues {
 	 *
 	 * @param mixed $meta  Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		if ( ! is_array( $meta ) ) {
-			$meta = array( $meta );
+			$meta = [ $meta ];
 		}
 
 		$field   = apply_filters( 'autocomplete', $field, $meta );
 		$options = $field['options'];
 
 		if ( is_array( $field['options'] ) ) {
-			$options = array();
+			$options = [];
 			foreach ( $field['options'] as $value => $label ) {
-				$options[] = array(
+				$options[] = [
 					'value' => $value,
 					'label' => $label,
-				);
+				];
 			}
 			$options = wp_json_encode( $options );
 		}
@@ -89,7 +90,7 @@ class Autocomplete extends MultipleValues {
 			$meta = array_filter( $meta );
 			foreach ( $meta as $value ) {
 				$label = apply_filters( 'rwmb_autocomplete_result_label', $value, $field );
-				$html .= sprintf(
+				$html  .= sprintf(
 					$tpl,
 					esc_html( $label ),
 					esc_html__( 'Delete', 'meta-box' ),
@@ -108,13 +109,15 @@ class Autocomplete extends MultipleValues {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'size' => 30,
-		) );
+		] );
+
 		return $field;
 	}
 }

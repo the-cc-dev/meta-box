@@ -41,7 +41,7 @@ class Cloner {
 				}
 			}
 
-			if ( in_array( $sub_field['type'], array( 'file', 'image' ), true ) ) {
+			if ( in_array( $sub_field['type'], [ 'file', 'image' ], true ) ) {
 				$sub_field['file_input_name'] = $field['file_input_name'] . "[{$index}]";
 			} elseif ( $field['multiple'] ) {
 				$sub_field['field_name'] .= '[]';
@@ -51,7 +51,7 @@ class Cloner {
 			$class     = "rwmb-clone rwmb-{$field['type']}-clone";
 			$sort_icon = '';
 			if ( $field['sort_clone'] ) {
-				$class .= ' rwmb-sort-clone';
+				$class     .= ' rwmb-sort-clone';
 				$sort_icon = "<a href='javascript:;' class='rwmb-clone-icon'></a>";
 			}
 			$input_html = "<div class='$class'>" . $sort_icon;
@@ -82,16 +82,16 @@ class Cloner {
 	 */
 	public static function value( $new, $old, $post_id, $field ) {
 		if ( ! is_array( $new ) ) {
-			$new = array();
+			$new = [];
 		}
 
-		if ( in_array( $field['type'], array( 'file', 'image' ), true ) ) {
+		if ( in_array( $field['type'], [ 'file', 'image' ], true ) ) {
 			return RWMB_Field::call( $field, 'value', $new, '', $post_id );
 		}
 
 		foreach ( $new as $key => $value ) {
-			$old_value = isset( $old[ $key ] ) ? $old[ $key ] : null;
-			$value     = RWMB_Field::call( $field, 'value', $value, $old_value, $post_id );
+			$old_value   = isset( $old[ $key ] ) ? $old[ $key ] : null;
+			$value       = RWMB_Field::call( $field, 'value', $value, $old_value, $post_id );
 			$new[ $key ] = RWMB_Field::filter( 'sanitize', $value, $field );
 		}
 
@@ -102,6 +102,7 @@ class Cloner {
 	 * Add clone button.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string $html
 	 */
 	public static function add_clone_button( $field ) {
@@ -109,6 +110,7 @@ class Cloner {
 			return '';
 		}
 		$text = RWMB_Field::filter( 'add_clone_button_text', $field['add_button'], $field );
+
 		return '<a href="#" class="rwmb-button button-primary add-clone">' . esc_html( $text ) . '</a>';
 	}
 
@@ -116,10 +118,12 @@ class Cloner {
 	 * Remove clone button.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string $html
 	 */
 	public static function remove_clone_button( $field ) {
 		$text = RWMB_Field::filter( 'remove_clone_button_text', '<i class="dashicons dashicons-minus"></i>', $field );
+
 		return '<a href="#" class="rwmb-button remove-clone">' . $text . '</a>';
 	}
 }

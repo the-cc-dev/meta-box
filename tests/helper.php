@@ -107,6 +107,7 @@ class RWMB_Test_Helper {
 	 * Show meta value in the frontend
 	 *
 	 * @param $content
+	 *
 	 * @return string
 	 */
 	public function the_content( $content ) {
@@ -129,6 +130,7 @@ class RWMB_Test_Helper {
 			$content .= '</td></tr>';
 		}
 		$content .= '</table>';
+
 		return $content;
 	}
 
@@ -137,10 +139,12 @@ class RWMB_Test_Helper {
 	 * In this case `rwmb_get_value()` and `rwmb_the_value()` will be called
 	 *
 	 * @param $key
+	 *
 	 * @return string
 	 */
 	public function meta_all( $key ) {
 		$meta = rwmb_meta( $key );
+
 		return is_string( $meta ) ? $meta : '<pre>' . print_r( $meta, true ) . '</pre>';
 	}
 
@@ -149,6 +153,7 @@ class RWMB_Test_Helper {
 	 * In this case `RWMB_Helper::meta` will be called
 	 *
 	 * @param $key
+	 *
 	 * @return string
 	 */
 	public function meta_admin( $key ) {

@@ -24,6 +24,7 @@ class Date extends Datetime {
 	 * Returns a date() compatible format string from the JavaScript format.
 	 *
 	 * @link http://www.php.net/manual/en/function.date.php
+	 *
 	 * @param array $field Field parameters.
 	 *
 	 * @return string

@@ -23,7 +23,7 @@ class SelectTree {
 	 *
 	 * @var array
 	 */
-	public $meta = array();
+	public $meta = [];
 
 	/**
 	 * Constructor.
@@ -33,11 +33,11 @@ class SelectTree {
 	 * @param mixed $meta      Meta value.
 	 */
 	public function __construct( $db_fields, $field, $meta ) {
-		$this->db_fields = wp_parse_args( (array) $db_fields, array(
+		$this->db_fields = wp_parse_args( (array) $db_fields, [
 			'parent' => '',
 			'id'     => '',
 			'label'  => '',
-		) );
+		] );
 		$this->field     = $field;
 		$this->meta      = (array) $meta;
 	}
@@ -51,14 +51,15 @@ class SelectTree {
 	 */
 	public function walk( $options ) {
 		$parent   = $this->db_fields['parent'];
-		$children = array();
+		$children = [];
 
 		foreach ( $options as $option ) {
-			$index = isset( $option->$parent ) ? $option->$parent : 0;
+			$index                = isset( $option->$parent ) ? $option->$parent : 0;
 			$children[ $index ][] = $option;
 		}
 
 		$top_level = isset( $children[0] ) ? 0 : $options[0]->$parent;
+
 		return $this->display_level( $children, $top_level, true );
 	}
 
@@ -84,9 +85,9 @@ class SelectTree {
 			$parent_id,
 			RWMB_Field::render_attributes( $attributes )
 		);
-		$output .= isset( $field['placeholder'] ) ? "<option value=''>{$field['placeholder']}</option>" : '<option></option>';
-		$output .= $walker->walk( $children, - 1 );
-		$output .= '</select>';
+		$output   .= isset( $field['placeholder'] ) ? "<option value=''>{$field['placeholder']}</option>" : '<option></option>';
+		$output   .= $walker->walk( $children, - 1 );
+		$output   .= '</select>';
 
 		foreach ( $children as $c ) {
 			if ( isset( $options[ $c->$id ] ) ) {
@@ -95,6 +96,7 @@ class SelectTree {
 		}
 
 		$output .= '</div>';
+
 		return $output;
 	}
 }

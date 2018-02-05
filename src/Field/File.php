@@ -15,23 +15,23 @@ class File extends Base {
 	 * Enqueue scripts and styles.
 	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'rwmb-file', RWMB_CSS_URL . 'file.css', array(), RWMB_VER );
-		wp_enqueue_script( 'rwmb-file', RWMB_JS_URL . 'file.js', array( 'jquery-ui-sortable' ), RWMB_VER, true );
+		wp_enqueue_style( 'rwmb-file', RWMB_CSS_URL . 'file.css', [], RWMB_VER );
+		wp_enqueue_script( 'rwmb-file', RWMB_JS_URL . 'file.js', [ 'jquery-ui-sortable' ], RWMB_VER, true );
 
-		self::localize_script( 'rwmb-file', 'rwmbFile', array(
+		self::localize_script( 'rwmb-file', 'rwmbFile', [
 			// Translators: %d is the number of files in singular form.
 			'maxFileUploadsSingle' => __( 'You may only upload maximum %d file', 'meta-box' ),
 			// Translators: %d is the number of files in plural form.
 			'maxFileUploadsPlural' => __( 'You may only upload maximum %d files', 'meta-box' ),
-		) );
+		] );
 	}
 
 	/**
 	 * Add custom actions.
 	 */
 	public static function add_actions() {
-		add_action( 'post_edit_form_tag', array( __CLASS__, 'post_edit_form_tag' ) );
-		add_action( 'wp_ajax_rwmb_delete_file', array( __CLASS__, 'ajax_delete_file' ) );
+		add_action( 'post_edit_form_tag', [ __CLASS__, 'post_edit_form_tag' ] );
+		add_action( 'wp_ajax_rwmb_delete_file', [ __CLASS__, 'ajax_delete_file' ] );
 	}
 
 	/**
@@ -86,6 +86,7 @@ class File extends Base {
 	 *
 	 * @param array $files List of uploaded files.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	protected static function get_uploaded_files( $files, $field ) {
@@ -99,6 +100,7 @@ class File extends Base {
 				$output .= self::call( $field, 'file_html', $file, $k );
 			}
 		}
+
 		return sprintf(
 			'<ul class="rwmb-uploaded" data-field_id="%s" data-delete_nonce="%s" data-reorder_nonce="%s" data-force_delete="%s" data-max_file_uploads="%s" data-mime_type="%s">%s</ul>',
 			$field['id'],
@@ -117,6 +119,7 @@ class File extends Base {
 	 * @param int   $file  Attachment (file) ID.
 	 * @param int   $index File index.
 	 * @param array $field Field data.
+	 *
 	 * @return string
 	 */
 	protected static function file_html( $file, $index, $field ) {
@@ -124,7 +127,7 @@ class File extends Base {
 		$i18n_edit   = apply_filters( 'rwmb_file_edit_string', _x( 'Edit', 'file upload', 'meta-box' ) );
 		$attributes  = self::get_attributes( $field, $file );
 		$path        = get_attached_file( $file );
-		$icon        = wp_get_attachment_image( $file, array( 60, 60 ), true );
+		$icon        = wp_get_attachment_image( $file, [ 60, 60 ], true );
 
 		return sprintf(
 			'<li class="rwmb-file">
@@ -177,6 +180,7 @@ class File extends Base {
 					$new[] = $attachment;
 				}
 			}
+
 			return $new;
 		}
 
@@ -184,7 +188,7 @@ class File extends Base {
 		$counts = self::transform_cloneable( $input );
 		foreach ( $counts as $clone_index => $count ) {
 			if ( empty( $new[ $clone_index ] ) ) {
-				$new[ $clone_index ] = array();
+				$new[ $clone_index ] = [];
 			}
 			for ( $i = 0; $i <= $count; $i ++ ) {
 				$attachment = media_handle_upload( "{$input}_{$clone_index}_{$i}", $post_id );
@@ -210,7 +214,7 @@ class File extends Base {
 			foreach ( $list as $index => $value ) {
 				$file_key = "{$input_name}_{$index}";
 				if ( ! isset( $_FILES[ $file_key ] ) ) {
-					$_FILES[ $file_key ] = array();
+					$_FILES[ $file_key ] = [];
 				}
 				$_FILES[ $file_key ][ $key ] = $value;
 			}
@@ -235,17 +239,18 @@ class File extends Base {
 					$file_key = "{$input_name}_{$clone_index}_{$index}";
 
 					if ( ! isset( $_FILES[ $file_key ] ) ) {
-						$_FILES[ $file_key ] = array();
+						$_FILES[ $file_key ] = [];
 					}
 					$_FILES[ $file_key ][ $key ] = $value;
 				}
 			}
 		}
 
-		$counts = array();
+		$counts = [];
 		foreach ( $_FILES[ $input_name ]['name'] as $clone_index => $clone_values ) {
 			$counts[ $clone_index ] = count( $clone_values );
 		}
+
 		return $counts;
 		// @codingStandardsIgnoreEnd
 	}
@@ -254,16 +259,17 @@ class File extends Base {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
 		$field             = parent::normalize( $field );
-		$field             = wp_parse_args( $field, array(
-			'default'              => array(),
+		$field             = wp_parse_args( $field, [
+			'default'          => [],
 			'force_delete'     => false,
 			'max_file_uploads' => 0,
 			'mime_type'        => '',
-		) );
+		] );
 		$field['multiple'] = true;
 
 		$field['file_input_name'] = '_file_' . $field['id'];
@@ -280,12 +286,12 @@ class File extends Base {
 	 *
 	 * @return mixed Full info of uploaded files
 	 */
-	public static function get_value( $field, $args = array(), $post_id = null ) {
+	public static function get_value( $field, $args = [], $post_id = null ) {
 		$value = parent::get_value( $field, $args, $post_id );
 		if ( ! $field['clone'] ) {
 			$value = self::call( 'files_info', $field, $value, $args );
 		} else {
-			$return = array();
+			$return = [];
 			foreach ( $value as $subvalue ) {
 				$return[] = self::call( 'files_info', $field, $subvalue, $args );
 			}
@@ -294,6 +300,7 @@ class File extends Base {
 		if ( isset( $args['limit'] ) ) {
 			$value = array_slice( $value, 0, intval( $args['limit'] ) );
 		}
+
 		return $value;
 	}
 
@@ -303,16 +310,18 @@ class File extends Base {
 	 * @param array $field Field parameters.
 	 * @param array $files Files IDs.
 	 * @param array $args  Additional arguments (for image size).
+	 *
 	 * @return array
 	 */
 	public static function files_info( $field, $files, $args ) {
-		$return = array();
+		$return = [];
 		foreach ( (array) $files as $file ) {
 			$info = self::call( $field, 'file_info', $file, $args );
 			if ( $info ) {
 				$return[ $file ] = $info;
 			}
 		}
+
 		return $return;
 	}
 
@@ -324,19 +333,19 @@ class File extends Base {
 	 *
 	 * @return array|bool False if file not found. Array of (id, name, path, url) on success.
 	 */
-	public static function file_info( $file, $args = array() ) {
+	public static function file_info( $file, $args = [] ) {
 		$path = get_attached_file( $file );
 		if ( ! $path ) {
 			return false;
 		}
 
-		return wp_parse_args( array(
+		return wp_parse_args( [
 			'ID'    => $file,
 			'name'  => basename( $path ),
 			'path'  => $path,
 			'url'   => wp_get_attachment_url( $file ),
 			'title' => get_the_title( $file ),
-		), wp_get_attachment_metadata( $file ) );
+		], wp_get_attachment_metadata( $file ) );
 	}
 
 	/**

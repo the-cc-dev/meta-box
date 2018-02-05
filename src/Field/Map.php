@@ -31,12 +31,12 @@ class Map extends Base {
 		 * @link https://developers.google.com/maps/documentation/javascript/libraries
 		 */
 		$google_maps_url = apply_filters( 'rwmb_google_maps_url', $google_maps_url );
-		wp_register_script( 'google-maps', esc_url_raw( $google_maps_url ), array(), '', true );
-		wp_enqueue_style( 'rwmb-map', RWMB_CSS_URL . 'map.css', array(), RWMB_VER );
-		wp_enqueue_script( 'rwmb-map', RWMB_JS_URL . 'map.js', array(
+		wp_register_script( 'google-maps', esc_url_raw( $google_maps_url ), [], '', true );
+		wp_enqueue_style( 'rwmb-map', RWMB_CSS_URL . 'map.css', [], RWMB_VER );
+		wp_enqueue_script( 'rwmb-map', RWMB_JS_URL . 'map.js', [
 			'jquery-ui-autocomplete',
 			'google-maps',
-		), RWMB_VER, true );
+		], RWMB_VER, true );
 	}
 
 	/**
@@ -84,15 +84,15 @@ class Map extends Base {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
-			'default'           => '',
+		$field = wp_parse_args( $field, [
+			'default'       => '',
 			'address_field' => '',
 			'region'        => '',
 
 			// Default API key, required by Google Maps since June 2016.
 			// Users should overwrite this key with their own key.
 			'api_key'       => 'AIzaSyC1mUh87SGFyf133tpZQJa-s96p0tgnraQ',
-		) );
+		] );
 
 		return $field;
 	}
@@ -108,9 +108,10 @@ class Map extends Base {
 	 *
 	 * @return mixed Array(latitude, longitude, zoom)
 	 */
-	public static function get_value( $field, $args = array(), $post_id = null ) {
+	public static function get_value( $field, $args = [], $post_id = null ) {
 		$value = parent::get_value( $field, $args, $post_id );
 		list( $latitude, $longitude, $zoom ) = explode( ',', $value . ',,' );
+
 		return compact( 'latitude', 'longitude', 'zoom' );
 	}
 
@@ -124,11 +125,12 @@ class Map extends Base {
 	 *
 	 * @return string HTML output of the field
 	 */
-	public static function the_value( $field, $args = array(), $post_id = null ) {
+	public static function the_value( $field, $args = [], $post_id = null ) {
 		$value = parent::get_value( $field, $args, $post_id );
-		$args  = wp_parse_args( $args, array(
+		$args  = wp_parse_args( $args, [
 			'api_key' => isset( $field['api_key'] ) ? $field['api_key'] : '',
-		) );
+		] );
+
 		return self::render_map( $value, $args );
 	}
 
@@ -140,13 +142,13 @@ class Map extends Base {
 	 *
 	 * @return string
 	 */
-	public static function render_map( $location, $args = array() ) {
+	public static function render_map( $location, $args = [] ) {
 		list( $latitude, $longitude, $zoom ) = explode( ',', $location . ',,' );
 		if ( ! $latitude || ! $longitude ) {
 			return '';
 		}
 
-		$args = wp_parse_args( $args, array(
+		$args = wp_parse_args( $args, [
 			'latitude'     => $latitude,
 			'longitude'    => $longitude,
 			'width'        => '100%',
@@ -154,12 +156,12 @@ class Map extends Base {
 			'marker'       => true, // Display marker?
 			'marker_title' => '', // Marker title, when hover.
 			'info_window'  => '', // Content of info window (when click on marker). HTML allowed.
-			'js_options'   => array(),
+			'js_options'   => [],
 
 			// Default API key, required by Google Maps since June 2016.
 			// Users should overwrite this key with their own key.
 			'api_key'      => 'AIzaSyC1mUh87SGFyf133tpZQJa-s96p0tgnraQ',
-		) );
+		] );
 
 		$google_maps_url = add_query_arg( 'key', $args['api_key'], 'https://maps.google.com/maps/api/js' );
 
@@ -168,8 +170,8 @@ class Map extends Base {
 		 * @link https://developers.google.com/maps/documentation/javascript/libraries
 		 */
 		$google_maps_url = apply_filters( 'rwmb_google_maps_url', $google_maps_url );
-		wp_register_script( 'google-maps', esc_url_raw( $google_maps_url ), array(), RWMB_VER, true );
-		wp_enqueue_script( 'rwmb-map-frontend', RWMB_JS_URL . 'map-frontend.js', array( 'google-maps' ), RWMB_VER, true );
+		wp_register_script( 'google-maps', esc_url_raw( $google_maps_url ), [], RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-map-frontend', RWMB_JS_URL . 'map-frontend.js', [ 'google-maps' ], RWMB_VER, true );
 
 		/*
 		 * Google Maps options.
@@ -177,13 +179,13 @@ class Map extends Base {
 		 * This array will be convert to Javascript Object and pass as map options.
 		 * @link https://developers.google.com/maps/documentation/javascript/reference
 		 */
-		$args['js_options'] = wp_parse_args( $args['js_options'], array(
+		$args['js_options'] = wp_parse_args( $args['js_options'], [
 			// Default to 'zoom' level set in admin, but can be overwritten.
 			'zoom'      => $zoom,
 
 			// Map type, see https://developers.google.com/maps/documentation/javascript/reference#MapTypeId.
 			'mapTypeId' => 'ROADMAP',
-		) );
+		] );
 
 		$output = sprintf(
 			'<div class="rwmb-map-canvas" data-map_options="%s" style="width:%s;height:%s"></div>',
@@ -191,6 +193,7 @@ class Map extends Base {
 			esc_attr( $args['width'] ),
 			esc_attr( $args['height'] )
 		);
+
 		return $output;
 	}
 }

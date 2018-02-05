@@ -16,7 +16,7 @@ class WPML {
 	 *
 	 * @var array
 	 */
-	protected $field_types = array( 'post', 'taxonomy_advanced' );
+	protected $field_types = [ 'post', 'taxonomy_advanced' ];
 
 	/**
 	 * Initialize.
@@ -27,7 +27,7 @@ class WPML {
 		 *
 		 * @see modify_field()
 		 */
-		add_action( 'init', array( $this, 'register_hooks' ), 9 );
+		add_action( 'init', [ $this, 'register_hooks' ], 9 );
 	}
 
 	/**
@@ -37,8 +37,8 @@ class WPML {
 		if ( ! defined( 'ICL_SITEPRESS_VERSION' ) ) {
 			return;
 		}
-		add_filter( 'wpml_duplicate_generic_string', array( $this, 'translate_ids' ), 10, 3 );
-		add_filter( 'rwmb_normalize_field', array( $this, 'modify_field' ) );
+		add_filter( 'wpml_duplicate_generic_string', [ $this, 'translate_ids' ], 10, 3 );
+		add_filter( 'rwmb_normalize_field', [ $this, 'modify_field' ] );
 	}
 
 	/**
@@ -47,6 +47,7 @@ class WPML {
 	 * @param mixed  $value           Meta value.
 	 * @param string $target_language Target language.
 	 * @param array  $meta_data       Meta arguments.
+	 *
 	 * @return mixed
 	 */
 	public function translate_ids( $value, $target_language, $meta_data ) {
@@ -65,11 +66,12 @@ class WPML {
 		// Translating values, whether are stored as comma separated strings or not.
 		if ( false === strpos( $value, ',' ) ) {
 			$value = apply_filters( 'wpml_object_id', $value, $object_type, true, $target_language );
+
 			return $value;
 		}
 
 		// Dealing with IDs stored as comma separated strings.
-		$translated_values = array();
+		$translated_values = [];
 		$values            = explode( ',', $value );
 
 		foreach ( $values as $v ) {
@@ -77,6 +79,7 @@ class WPML {
 		}
 
 		$value = implode( ',', $translated_values );
+
 		return $value;
 	}
 

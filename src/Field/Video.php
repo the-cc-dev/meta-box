@@ -3,7 +3,7 @@
  * Video field which uses WordPress media popup to upload and select video.
  *
  * @package Meta Box
- * @since 4.10
+ * @since   4.10
  */
 
 namespace MetaBox\Field;
@@ -17,11 +17,11 @@ class Video extends Media {
 	 */
 	public static function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
-		wp_enqueue_style( 'rwmb-video', RWMB_CSS_URL . 'video.css', array( 'rwmb-media' ), RWMB_VER );
-		wp_enqueue_script( 'rwmb-video', RWMB_JS_URL . 'video.js', array( 'rwmb-media' ), RWMB_VER, true );
-		self::localize_script( 'rwmb-video', 'i18nRwmbVideo', array(
+		wp_enqueue_style( 'rwmb-video', RWMB_CSS_URL . 'video.css', [ 'rwmb-media' ], RWMB_VER );
+		wp_enqueue_script( 'rwmb-video', RWMB_JS_URL . 'video.js', [ 'rwmb-media' ], RWMB_VER, true );
+		self::localize_script( 'rwmb-video', 'i18nRwmbVideo', [
 			'extensions' => wp_get_video_extensions(),
-		) );
+		] );
 	}
 
 	/**
@@ -42,27 +42,27 @@ class Video extends Media {
 	 * Get uploaded file information.
 	 *
 	 * @param int   $file_id Attachment image ID (post ID). Required.
-	 * @param array $args Array of arguments (for size).
+	 * @param array $args    Array of arguments (for size).
 	 *
 	 * @return array|bool False if file not found. Array of image info on success.
 	 */
-	public static function file_info( $file_id, $args = array() ) {
+	public static function file_info( $file_id, $args = [] ) {
 		if ( ! get_attached_file( $file_id ) ) {
 			return false;
 		}
 		$attachment = get_post( $file_id );
 		$url        = wp_get_attachment_url( $attachment->ID );
 		$file_type  = wp_check_filetype( $url, wp_get_mime_types() );
-		$data       = array(
+		$data       = [
 			'ID'          => $file_id,
 			'src'         => $url,
 			'type'        => $file_type['type'],
 			'title'       => $attachment->post_title,
 			'caption'     => $attachment->post_excerpt,
 			'description' => $attachment->post_content,
-		);
+		];
 
-		$data['meta'] = array();
+		$data['meta'] = [];
 		$meta         = wp_get_attachment_metadata( $attachment->ID );
 		if ( ! empty( $meta ) ) {
 			foreach ( wp_get_attachment_id3_keys( $attachment ) as $key => $label ) {
@@ -72,15 +72,15 @@ class Video extends Media {
 			}
 
 			if ( ! empty( $meta['width'] ) && ! empty( $meta['height'] ) ) {
-				$data['dimensions'] = array(
+				$data['dimensions'] = [
 					'width'  => $meta['width'],
 					'height' => $meta['height'],
-				);
+				];
 			} else {
-				$data['dimensions'] = array(
+				$data['dimensions'] = [
 					'width'  => 640,
 					'height' => 360,
-				);
+				];
 			}
 		}
 
@@ -114,10 +114,10 @@ class Video extends Media {
 	public static function format_single_value( $field, $value, $args, $post_id ) {
 		$ids = implode( ',', wp_list_pluck( $value, 'ID' ) );
 
-		return wp_playlist_shortcode( array(
+		return wp_playlist_shortcode( [
 			'ids'  => $ids,
 			'type' => 'video',
-		) );
+		] );
 	}
 
 	/**

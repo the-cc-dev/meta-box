@@ -28,17 +28,17 @@ class Page {
 		$this->plugin = get_plugin_data( RWMB_DIR . 'meta-box.php' );
 
 		// Add links to about page in the plugin action links.
-		add_filter( 'plugin_action_links_meta-box/meta-box.php', array( $this, 'plugin_links' ) );
+		add_filter( 'plugin_action_links_meta-box/meta-box.php', [ $this, 'plugin_links' ] );
 
 		// Add a hidden about page.
-		add_action( 'admin_menu', array( $this, 'register_page' ) );
-		add_action( 'admin_head', array( $this, 'hide_page' ) );
+		add_action( 'admin_menu', [ $this, 'register_page' ] );
+		add_action( 'admin_head', [ $this, 'hide_page' ] );
 
 		// Enqueue scripts and styles for about page.
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ] );
 
 		// Redirect to about page after activation.
-		add_action( 'activated_plugin', array( $this, 'redirect' ), 10, 2 );
+		add_action( 'activated_plugin', [ $this, 'redirect' ], 10, 2 );
 	}
 
 	/**
@@ -50,6 +50,7 @@ class Page {
 	 */
 	public function plugin_links( $links ) {
 		$links[] = '<a href="' . esc_url( admin_url( 'index.php?page=meta-box-about' ) ) . '">' . esc_html__( 'About', 'meta-box' ) . '</a>';
+
 		return $links;
 	}
 
@@ -62,7 +63,7 @@ class Page {
 			__( 'Welcome to Meta Box', 'meta-box' ),
 			'activate_plugins',
 			'meta-box-about',
-			array( $this, 'render' )
+			[ $this, 'render' ]
 		);
 	}
 
@@ -95,7 +96,7 @@ class Page {
 			return;
 		}
 		wp_enqueue_style( 'meta-box-about', RWMB_URL . 'inc/about/css/style.css' );
-		wp_enqueue_script( 'meta-box-about', RWMB_URL . 'inc/about/js/script.js', array( 'jquery' ), '', true );
+		wp_enqueue_script( 'meta-box-about', RWMB_URL . 'inc/about/js/script.js', [ 'jquery' ], '', true );
 	}
 
 	/**
@@ -122,6 +123,7 @@ class Page {
 				return true;
 			}
 		}
+
 		return false;
 	}
 }

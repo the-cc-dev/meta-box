@@ -18,7 +18,7 @@ class Datetime extends Text {
 	 *
 	 * @var array
 	 */
-	protected static $date_formats = array(
+	protected static $date_formats = [
 		'd'  => 'j',
 		'dd' => 'd',
 		'oo' => 'z',
@@ -31,7 +31,7 @@ class Datetime extends Text {
 		'y'  => 'y',
 		'yy' => 'Y',
 		'o'  => 'z',
-	);
+	];
 
 	/**
 	 * Translate time format from jQuery UI time picker to PHP date().
@@ -40,7 +40,7 @@ class Datetime extends Text {
 	 *
 	 * @var array
 	 */
-	protected static $time_formats = array(
+	protected static $time_formats = [
 		'H'  => 'G',
 		'HH' => 'H',
 		'h'  => 'g',
@@ -50,36 +50,51 @@ class Datetime extends Text {
 		'l'  => 'u',
 		'tt' => 'a',
 		'TT' => 'A',
-	);
+	];
 
 	/**
 	 * Register scripts and styles.
 	 */
 	public static function admin_register_scripts() {
 		$url = RWMB_CSS_URL . 'jqueryui';
-		wp_register_style( 'jquery-ui-core', "$url/jquery.ui.core.css", array(), '1.8.17' );
-		wp_register_style( 'jquery-ui-theme', "$url/jquery.ui.theme.css", array(), '1.8.17' );
-		wp_register_style( 'jquery-ui-datepicker', "$url/jquery.ui.datepicker.css", array( 'jquery-ui-core', 'jquery-ui-theme' ), '1.8.17' );
-		wp_register_style( 'rwmb-date', RWMB_CSS_URL . 'datepicker.css', array( 'jquery-ui-datepicker' ), '1.8.17' );
+		wp_register_style( 'jquery-ui-core', "$url/jquery.ui.core.css", [], '1.8.17' );
+		wp_register_style( 'jquery-ui-theme', "$url/jquery.ui.theme.css", [], '1.8.17' );
+		wp_register_style( 'jquery-ui-datepicker', "$url/jquery.ui.datepicker.css", [
+			'jquery-ui-core',
+			'jquery-ui-theme',
+		], '1.8.17' );
+		wp_register_style( 'rwmb-date', RWMB_CSS_URL . 'datepicker.css', [ 'jquery-ui-datepicker' ], '1.8.17' );
 
-		wp_register_style( 'jquery-ui-slider', "$url/jquery.ui.slider.css", array( 'jquery-ui-core', 'jquery-ui-theme' ), '1.8.17' );
-		wp_register_style( 'jquery-ui-timepicker', "$url/jquery-ui-timepicker-addon.min.css", array( 'rwmb-date', 'jquery-ui-slider' ), '1.5.0' );
+		wp_register_style( 'jquery-ui-slider', "$url/jquery.ui.slider.css", [
+			'jquery-ui-core',
+			'jquery-ui-theme',
+		], '1.8.17' );
+		wp_register_style( 'jquery-ui-timepicker', "$url/jquery-ui-timepicker-addon.min.css", [
+			'rwmb-date',
+			'jquery-ui-slider',
+		], '1.5.0' );
 
 		$url = RWMB_JS_URL . 'jqueryui';
-		wp_register_script( 'jquery-ui-timepicker', "$url/jquery-ui-timepicker-addon.min.js", array( 'jquery-ui-datepicker', 'jquery-ui-slider' ), '1.5.0', true );
-		wp_register_script( 'jquery-ui-timepicker-i18n', "$url/jquery-ui-timepicker-addon-i18n.min.js", array( 'jquery-ui-timepicker' ), '1.5.0', true );
+		wp_register_script( 'jquery-ui-timepicker', "$url/jquery-ui-timepicker-addon.min.js", [
+			'jquery-ui-datepicker',
+			'jquery-ui-slider',
+		], '1.5.0', true );
+		wp_register_script( 'jquery-ui-timepicker-i18n', "$url/jquery-ui-timepicker-addon-i18n.min.js", [ 'jquery-ui-timepicker' ], '1.5.0', true );
 
-		wp_register_script( 'rwmb-datetime', RWMB_JS_URL . 'datetime.js', array( 'jquery-ui-datepicker', 'jquery-ui-timepicker-i18n' ), RWMB_VER, true );
-		wp_register_script( 'rwmb-date', RWMB_JS_URL . 'date.js', array( 'jquery-ui-datepicker' ), RWMB_VER, true );
-		wp_register_script( 'rwmb-time', RWMB_JS_URL . 'time.js', array( 'jquery-ui-timepicker-i18n' ), RWMB_VER, true );
+		wp_register_script( 'rwmb-datetime', RWMB_JS_URL . 'datetime.js', [
+			'jquery-ui-datepicker',
+			'jquery-ui-timepicker-i18n',
+		], RWMB_VER, true );
+		wp_register_script( 'rwmb-date', RWMB_JS_URL . 'date.js', [ 'jquery-ui-datepicker' ], RWMB_VER, true );
+		wp_register_script( 'rwmb-time', RWMB_JS_URL . 'time.js', [ 'jquery-ui-timepicker-i18n' ], RWMB_VER, true );
 
-		$handles      = array( 'datetime', 'time' );
+		$handles      = [ 'datetime', 'time' ];
 		$locale       = str_replace( '_', '-', get_locale() );
 		$locale_short = substr( $locale, 0, 2 );
-		$data         = array(
+		$data         = [
 			'locale'      => $locale,
 			'localeShort' => $locale_short,
-		);
+		];
 		foreach ( $handles as $handle ) {
 			self::localize_script( "rwmb-$handle", 'RWMB_' . ucfirst( $handle ), $data );
 		}
@@ -106,16 +121,16 @@ class Datetime extends Text {
 		$output = '';
 
 		if ( $field['timestamp'] ) {
-			$name  = $field['field_name'];
-			$field = wp_parse_args( array(
+			$name   = $field['field_name'];
+			$field  = wp_parse_args( [
 				'field_name' => $name . '[formatted]',
-			), $field );
+			], $field );
 			$output .= sprintf(
 				'<input type="hidden" name="%s" class="rwmb-datetime-timestamp" value="%s">',
 				esc_attr( $name . '[timestamp]' ),
 				isset( $meta['timestamp'] ) ? intval( $meta['timestamp'] ) : ''
 			);
-			$meta = isset( $meta['formatted'] ) ? $meta['formatted'] : '';
+			$meta   = isset( $meta['formatted'] ) ? $meta['formatted'] : '';
 		}
 
 		$output .= parent::html( $meta, $field );
@@ -155,6 +170,7 @@ class Datetime extends Text {
 		if ( $field['timestamp'] ) {
 			$meta = self::prepare_meta( $meta, $field );
 		}
+
 		return $meta;
 	}
 
@@ -163,6 +179,7 @@ class Datetime extends Text {
 	 *
 	 * @param array|string $meta  The meta value.
 	 * @param array        $field Field parameters.
+	 *
 	 * @return array
 	 */
 	protected static function prepare_meta( $meta, $field ) {
@@ -170,40 +187,43 @@ class Datetime extends Text {
 			foreach ( $meta as $key => $value ) {
 				$meta[ $key ] = self::prepare_meta( $value, $field );
 			}
+
 			return $meta;
 		}
-		return array(
+
+		return [
 			'timestamp' => $meta ? $meta : null,
 			'formatted' => $meta ? date( self::call( 'translate_format', $field ), intval( $meta ) ) : '',
-		);
+		];
 	}
 
 	/**
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field The field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'timestamp'  => false,
 			'inline'     => false,
-			'js_options' => array(),
-		) );
+			'js_options' => [],
+		] );
 
 		// Deprecate 'format', but keep it for backward compatible.
 		// Use 'js_options' instead.
-		$field['js_options'] = wp_parse_args( $field['js_options'], array(
+		$field['js_options'] = wp_parse_args( $field['js_options'], [
 			'timeFormat'      => 'HH:mm',
 			'separator'       => ' ',
 			'dateFormat'      => empty( $field['format'] ) ? 'yy-mm-dd' : $field['format'],
 			'showButtonPanel' => true,
-		) );
+		] );
 
 		if ( $field['inline'] ) {
-			$field['js_options'] = wp_parse_args( $field['js_options'], array(
+			$field['js_options'] = wp_parse_args( $field['js_options'], [
 				'altFieldTimeOnly' => false,
-			) );
+			] );
 		}
 
 		$field = parent::normalize( $field );
@@ -220,10 +240,10 @@ class Datetime extends Text {
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
-		$attributes = parent::get_attributes( $field, $value );
-		$attributes = wp_parse_args( $attributes, array(
+		$attributes         = parent::get_attributes( $field, $value );
+		$attributes         = wp_parse_args( $attributes, [
 			'data-options' => wp_json_encode( $field['js_options'] ),
-		) );
+		] );
 		$attributes['type'] = 'text';
 
 		return $attributes;
@@ -233,14 +253,15 @@ class Datetime extends Text {
 	 * Returns a date() compatible format string from the JavaScript format.
 	 *
 	 * @link http://www.php.net/manual/en/function.date.php
+	 *
 	 * @param array $field The field parameters.
 	 *
 	 * @return string
 	 */
 	public static function translate_format( $field ) {
 		return strtr( $field['js_options']['dateFormat'], self::$date_formats )
-		. $field['js_options']['separator']
-		. strtr( $field['js_options']['timeFormat'], self::$time_formats );
+		       . $field['js_options']['separator']
+		       . strtr( $field['js_options']['timeFormat'], self::$time_formats );
 	}
 
 	/**
@@ -260,6 +281,7 @@ class Datetime extends Text {
 		if ( ! $field['timestamp'] ) {
 			$value = strtotime( $value );
 		}
+
 		return date( $args['format'], $value );
 	}
 }

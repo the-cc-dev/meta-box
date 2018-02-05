@@ -17,7 +17,7 @@ class MetaBoxRegistry {
 	 *
 	 * @var array
 	 */
-	private $data = array();
+	private $data = [];
 
 	/**
 	 * Add a meta box to the registry.

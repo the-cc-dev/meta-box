@@ -33,11 +33,13 @@ add_filter( 'rwmb_meta_boxes', function ( $meta_boxes ) {
 			],
 		],
 	];
+
 	return $meta_boxes;
 } );
 
 // Output in the frontend
 add_filter( 'the_content', function ( $content ) {
 	$content .= '<h2>Test <code>rwmb_meta( \'name\' )</code></h2>' . rwmb_meta( 'name' );
+
 	return $content;
 } );

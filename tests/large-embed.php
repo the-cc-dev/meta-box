@@ -25,5 +25,6 @@ add_filter( 'rwmb_meta_boxes', function ( $meta_boxes ) {
 			],
 		],
 	];
+
 	return $meta_boxes;
 } );

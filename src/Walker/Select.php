@@ -22,7 +22,7 @@ class Select extends Base {
 	 * @param array  $args              An array of additional arguments.
 	 * @param int    $current_object_id ID of the current item.
 	 */
-	public function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
+	public function start_el( &$output, $object, $depth = 0, $args = [], $current_object_id = 0 ) {
 		$label  = $this->db_fields['label'];
 		$id     = $this->db_fields['id'];
 		$meta   = $this->meta;

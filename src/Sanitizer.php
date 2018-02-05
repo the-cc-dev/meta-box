@@ -17,12 +17,12 @@ class Sanitizer {
 	 *
 	 * @var array
 	 */
-	protected $callbacks = array(
+	protected $callbacks = [
 		'email'      => 'sanitize_email',
 		'file_input' => 'esc_url_raw',
 		'oembed'     => 'esc_url_raw',
 		'url'        => 'esc_url_raw',
-	);
+	];
 
 	/**
 	 * Register hook to sanitize field value.
@@ -34,9 +34,9 @@ class Sanitizer {
 		}
 
 		// Custom callback.
-		$types = array_diff( get_class_methods( __CLASS__ ), array( 'init' ) );
+		$types = array_diff( get_class_methods( __CLASS__ ), [ 'init' ] );
 		foreach ( $types as $type ) {
-			add_filter( "rwmb_{$type}_sanitize", array( $this, $type ) );
+			add_filter( "rwmb_{$type}_sanitize", [ $this, $type ] );
 		}
 	}
 
@@ -45,7 +45,9 @@ class Sanitizer {
 	 * This prevents using default value once the checkbox has been unchecked.
 	 *
 	 * @link https://github.com/rilwis/meta-box/issues/6
+	 *
 	 * @param string $value Checkbox value.
+	 *
 	 * @return int
 	 */
 	public function checkbox( $value ) {

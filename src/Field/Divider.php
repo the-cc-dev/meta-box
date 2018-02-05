@@ -15,7 +15,7 @@ class Divider extends Base {
 	 * Enqueue scripts and styles.
 	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'rwmb-divider', RWMB_CSS_URL . 'divider.css', array(), RWMB_VER );
+		wp_enqueue_style( 'rwmb-divider', RWMB_CSS_URL . 'divider.css', [], RWMB_VER );
 	}
 
 	/**
@@ -28,6 +28,7 @@ class Divider extends Base {
 	 */
 	public static function begin_html( $meta, $field ) {
 		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
+
 		return "<hr$attributes>";
 	}
 

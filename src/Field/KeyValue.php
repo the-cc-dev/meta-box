@@ -95,6 +95,7 @@ class KeyValue extends Text {
 		foreach ( (array) $meta as $k => $pairs ) {
 			$meta[ $k ] = array_map( 'esc_attr', (array) $pairs );
 		}
+
 		return $meta;
 	}
 
@@ -115,6 +116,7 @@ class KeyValue extends Text {
 			}
 		}
 		$new = array_filter( $new );
+
 		return $new;
 	}
 
@@ -130,10 +132,11 @@ class KeyValue extends Text {
 		$field['clone']              = true;
 		$field['multiple']           = true;
 		$field['attributes']['type'] = 'text';
-		$field['placeholder']        = wp_parse_args( (array) $field['placeholder'], array(
+		$field['placeholder']        = wp_parse_args( (array) $field['placeholder'], [
 			'key'   => __( 'Key', 'meta-box' ),
 			'value' => __( 'Value', 'meta-box' ),
-		) );
+		] );
+
 		return $field;
 	}
 

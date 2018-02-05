@@ -19,11 +19,11 @@ class Core {
 	public function init() {
 		load_plugin_textdomain( 'meta-box', false, plugin_basename( RWMB_DIR ) . '/languages/' );
 
-		add_filter( 'plugin_action_links_meta-box/meta-box.php', array( $this, 'plugin_links' ) );
+		add_filter( 'plugin_action_links_meta-box/meta-box.php', [ $this, 'plugin_links' ] );
 
 		// Uses priority 20 to support custom port types registered using the default priority.
-		add_action( 'init', array( $this, 'register_meta_boxes' ), 20 );
-		add_action( 'edit_page_form', array( $this, 'fix_page_template' ) );
+		add_action( 'init', [ $this, 'register_meta_boxes' ], 20 );
+		add_action( 'edit_page_form', [ $this, 'fix_page_template' ] );
 		$this->add_context_hooks();
 	}
 
@@ -39,6 +39,7 @@ class Core {
 	public function plugin_links( $links ) {
 		$links[] = '<a href="https://docs.metabox.io">' . esc_html__( 'Documentation', 'meta-box' ) . '</a>';
 		$links[] = '<a href="https://metabox.io/plugins/">' . esc_html__( 'Extensions', 'meta-box' ) . '</a>';
+
 		return $links;
 	}
 
@@ -49,7 +50,7 @@ class Core {
 	 * - no need to check for class existences.
 	 */
 	public function register_meta_boxes() {
-		$configs    = apply_filters( 'rwmb_meta_boxes', array() );
+		$configs    = apply_filters( 'rwmb_meta_boxes', [] );
 		$meta_boxes = rwmb_get_registry( 'meta_box' );
 
 		foreach ( $configs as $config ) {
@@ -87,6 +88,7 @@ class Core {
 	 */
 	public static function get_meta_boxes() {
 		$meta_boxes = rwmb_get_registry( 'meta_box' )->all();
+
 		return wp_list_pluck( $meta_boxes, 'meta_box' );
 	}
 
@@ -94,15 +96,15 @@ class Core {
 	 * Add hooks for extra contexts.
 	 */
 	public function add_context_hooks() {
-		$hooks = array(
+		$hooks = [
 			'edit_form_top',
 			'edit_form_after_title',
 			'edit_form_after_editor',
 			'edit_form_before_permalink',
-		);
+		];
 
 		foreach ( $hooks as $hook ) {
-			add_action( $hook, array( $this, 'add_context' ) );
+			add_action( $hook, [ $this, 'add_context' ] );
 		}
 	}
 

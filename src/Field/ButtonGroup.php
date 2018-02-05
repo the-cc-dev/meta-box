@@ -16,7 +16,7 @@ class ButtonGroup extends Choice {
 	 */
 	public static function admin_enqueue_scripts() {
 		wp_enqueue_style( 'rwmb-button-group', RWMB_CSS_URL . 'button-group.css', '', RWMB_VER );
-		wp_enqueue_script( 'rwmb-button-group', RWMB_JS_URL . 'button-group.js', array(), RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-button-group', RWMB_JS_URL . 'button-group.js', [], RWMB_VER, true );
 	}
 
 	/**
@@ -50,9 +50,9 @@ class ButtonGroup extends Choice {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'inline' => null,
-		) );
+		] );
 
 		$field = $field['multiple'] ? MultipleValues::normalize( $field ) : $field;
 		$field = Input::normalize( $field );

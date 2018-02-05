@@ -17,7 +17,10 @@ class ImageUpload extends ImageAdvanced {
 	public static function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
 		File_Upload::admin_enqueue_scripts();
-		wp_enqueue_script( 'rwmb-image-upload', RWMB_JS_URL . 'image-upload.js', array( 'rwmb-file-upload', 'rwmb-image-advanced' ), RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-image-upload', RWMB_JS_URL . 'image-upload.js', [
+			'rwmb-file-upload',
+			'rwmb-image-advanced',
+		], RWMB_VER, true );
 	}
 
 	/**
@@ -29,6 +32,7 @@ class ImageUpload extends ImageAdvanced {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
+
 		return File_Upload::normalize( $field );
 	}
 

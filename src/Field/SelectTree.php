@@ -23,6 +23,7 @@ class SelectTree extends Select {
 	 */
 	public static function walk( $field, $options, $db_fields, $meta ) {
 		$walker = new Walker_Select_Tree( $dbs, $field, $meta );
+
 		return $walker->walk( $options );
 	}
 
@@ -31,14 +32,15 @@ class SelectTree extends Select {
 	 */
 	public static function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
-		wp_enqueue_style( 'rwmb-select-tree', RWMB_CSS_URL . 'select-tree.css', array( 'rwmb-select' ), RWMB_VER );
-		wp_enqueue_script( 'rwmb-select-tree', RWMB_JS_URL . 'select-tree.js', array( 'rwmb-select' ), RWMB_VER, true );
+		wp_enqueue_style( 'rwmb-select-tree', RWMB_CSS_URL . 'select-tree.css', [ 'rwmb-select' ], RWMB_VER );
+		wp_enqueue_script( 'rwmb-select-tree', RWMB_JS_URL . 'select-tree.js', [ 'rwmb-select' ], RWMB_VER, true );
 	}
 
 	/**
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {

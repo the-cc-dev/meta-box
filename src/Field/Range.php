@@ -16,11 +16,13 @@ class Range extends Number {
 	 *
 	 * @param mixed $meta  Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		$output = parent::html( $meta, $field );
 		$output .= sprintf( '<span class="rwmb-output">%s</span>', $meta );
+
 		return $output;
 	}
 
@@ -28,21 +30,23 @@ class Range extends Number {
 	 * Enqueue styles.
 	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'rwmb-range', RWMB_CSS_URL . 'range.css', array(), RWMB_VER );
-		wp_enqueue_script( 'rwmb-range', RWMB_JS_URL . 'range.js', array(), RWMB_VER, true );
+		wp_enqueue_style( 'rwmb-range', RWMB_CSS_URL . 'range.css', [], RWMB_VER );
+		wp_enqueue_script( 'rwmb-range', RWMB_JS_URL . 'range.js', [], RWMB_VER, true );
 	}
 
 	/**
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'max' => 10,
-		) );
+		] );
 		$field = parent::normalize( $field );
+
 		return $field;
 	}
 
@@ -67,6 +71,7 @@ class Range extends Number {
 		if ( $new > $max ) {
 			return $max;
 		}
+
 		return $new;
 	}
 }

@@ -15,6 +15,7 @@ class Taxonomy extends ObjectChoice {
 	 * Add default value for 'taxonomy' field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -31,14 +32,14 @@ class Taxonomy extends ObjectChoice {
 
 		// Set default field args.
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
-			'taxonomy'   => 'category',
-		) );
+		$field = wp_parse_args( $field, [
+			'taxonomy' => 'category',
+		] );
 
 		// Set default query args.
-		$field['query_args'] = wp_parse_args( $field['query_args'], array(
+		$field['query_args'] = wp_parse_args( $field['query_args'], [
 			'hide_empty' => false,
-		) );
+		] );
 
 		/*
 		 * Set default placeholder:
@@ -67,11 +68,11 @@ class Taxonomy extends ObjectChoice {
 	 * @return array
 	 */
 	public static function get_db_fields() {
-		return array(
+		return [
 			'parent' => 'parent',
 			'id'     => 'term_id',
 			'label'  => 'name',
-		);
+		];
 	}
 
 	/**
@@ -83,6 +84,7 @@ class Taxonomy extends ObjectChoice {
 	 */
 	public static function get_options( $field ) {
 		$options = get_terms( $field['taxonomy'], $field['query_args'] );
+
 		return $options;
 	}
 
@@ -109,7 +111,7 @@ class Taxonomy extends ObjectChoice {
 	 *
 	 * @return mixed
 	 */
-	public static function raw_meta( $object_id, $field, $args = array() ) {
+	public static function raw_meta( $object_id, $field, $args = [] ) {
 		if ( empty( $field['id'] ) ) {
 			return '';
 		}
@@ -117,7 +119,7 @@ class Taxonomy extends ObjectChoice {
 		$meta = get_the_terms( $object_id, $field['taxonomy'] );
 
 		if ( ! is_array( $meta ) || empty( $meta ) ) {
-			return $field['multiple'] ? array() : '';
+			return $field['multiple'] ? [] : '';
 		}
 
 		$meta = wp_list_pluck( $meta, 'term_id' );
@@ -135,13 +137,14 @@ class Taxonomy extends ObjectChoice {
 	 *
 	 * @return array List of post term objects.
 	 */
-	public static function get_value( $field, $args = array(), $post_id = null ) {
+	public static function get_value( $field, $args = [], $post_id = null ) {
 		$value = get_the_terms( $post_id, $field['taxonomy'] );
 
 		// Get single value if necessary.
 		if ( ! $field['clone'] && ! $field['multiple'] && is_array( $value ) ) {
 			$value = reset( $value );
 		}
+
 		return $value;
 	}
 

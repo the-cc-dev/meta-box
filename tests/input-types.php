@@ -57,11 +57,11 @@ add_filter( 'rwmb_meta_boxes', function ( $meta_boxes ) {
 				'name'    => 'Fieldset Text',
 				'id'      => 'fieldset_text',
 				'type'    => 'fieldset_text',
-				'options' => array(
+				'options' => [
 					'name'    => __( 'Name', 'your-prefix' ),
 					'address' => __( 'Address', 'your-prefix' ),
 					'email'   => __( 'Email', 'your-prefix' ),
-				),
+				],
 			],
 			[
 				'name' => 'Key Value',
@@ -116,5 +116,6 @@ add_filter( 'rwmb_meta_boxes', function ( $meta_boxes ) {
 			],
 		],
 	];
+
 	return $meta_boxes;
 } );

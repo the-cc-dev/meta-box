@@ -16,12 +16,17 @@ class Slider extends Base {
 	 */
 	public static function admin_enqueue_scripts() {
 		$url = RWMB_CSS_URL . 'jqueryui';
-		wp_enqueue_style( 'jquery-ui-core', "{$url}/jquery.ui.core.css", array(), '1.8.17' );
-		wp_enqueue_style( 'jquery-ui-theme', "{$url}/jquery.ui.theme.css", array(), '1.8.17' );
-		wp_enqueue_style( 'jquery-ui-slider', "{$url}/jquery.ui.slider.css", array(), '1.8.17' );
+		wp_enqueue_style( 'jquery-ui-core', "{$url}/jquery.ui.core.css", [], '1.8.17' );
+		wp_enqueue_style( 'jquery-ui-theme', "{$url}/jquery.ui.theme.css", [], '1.8.17' );
+		wp_enqueue_style( 'jquery-ui-slider', "{$url}/jquery.ui.slider.css", [], '1.8.17' );
 		wp_enqueue_style( 'rwmb-slider', RWMB_CSS_URL . 'slider.css' );
 
-		wp_enqueue_script( 'rwmb-slider', RWMB_JS_URL . 'slider.js', array( 'jquery-ui-slider', 'jquery-ui-widget', 'jquery-ui-mouse', 'jquery-ui-core' ), RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-slider', RWMB_JS_URL . 'slider.js', [
+			'jquery-ui-slider',
+			'jquery-ui-widget',
+			'jquery-ui-mouse',
+			'jquery-ui-core',
+		], RWMB_VER, true );
 	}
 
 	/**
@@ -54,16 +59,16 @@ class Slider extends Base {
 	 */
 	public static function normalize( $field ) {
 		$field               = parent::normalize( $field );
-		$field               = wp_parse_args( $field, array(
+		$field               = wp_parse_args( $field, [
 			'prefix'     => '',
 			'suffix'     => '',
-			'default'        => '',
-			'js_options' => array(),
-		) );
-		$field['js_options'] = wp_parse_args( $field['js_options'], array(
+			'default'    => '',
+			'js_options' => [],
+		] );
+		$field['js_options'] = wp_parse_args( $field['js_options'], [
 			'range' => 'min', // range = 'min' will add a dark background to sliding part, better UI.
 			'value' => $field['default'],
-		) );
+		] );
 
 		return $field;
 	}

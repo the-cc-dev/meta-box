@@ -24,10 +24,10 @@ class SingleImage extends ImageAdvanced {
 
 		$field = parent::normalize( $field );
 
-		$field['attributes'] = wp_parse_args( $field['attributes'], array(
+		$field['attributes'] = wp_parse_args( $field['attributes'], [
 			'class'             => '',
 			'data-single-image' => 1,
-		) );
+		] );
 
 		$field['attributes']['class'] .= ' rwmb-image_advanced';
 		$field['multiple']            = false;
@@ -58,9 +58,10 @@ class SingleImage extends ImageAdvanced {
 	 *
 	 * @return mixed Full info of uploaded files
 	 */
-	public static function get_value( $field, $args = array(), $post_id = null ) {
+	public static function get_value( $field, $args = [], $post_id = null ) {
 		$value  = Base::get_value( $field, $args, $post_id );
 		$return = Image::file_info( $value, $args );
+
 		return $return;
 	}
 }

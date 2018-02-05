@@ -43,10 +43,11 @@ class Sidebar extends ObjectChoice {
 	 */
 	public static function get_options( $field ) {
 		global $wp_registered_sidebars;
-		$options = array();
+		$options = [];
 		foreach ( $wp_registered_sidebars as $sidebar ) {
 			$options[] = (object) $sidebar;
 		}
+
 		return $options;
 	}
 
@@ -56,11 +57,11 @@ class Sidebar extends ObjectChoice {
 	 * @return array
 	 */
 	public static function get_db_fields() {
-		return array(
+		return [
 			'parent' => 'parent',
 			'id'     => 'id',
 			'label'  => 'name',
-		);
+		];
 	}
 
 	/**
@@ -77,6 +78,7 @@ class Sidebar extends ObjectChoice {
 		}
 		ob_start();
 		dynamic_sidebar( $value );
+
 		return ob_get_clean();
 	}
 }

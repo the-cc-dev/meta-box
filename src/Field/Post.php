@@ -15,15 +15,16 @@ class Post extends ObjectChoice {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
 		// Set default field args.
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'post_type' => 'post',
 			'parent'    => false,
-		) );
+		] );
 
 		if ( ! isset( $field['query_args']['post_type'] ) ) {
 			$field['query_args']['post_type'] = $field['post_type'];
@@ -51,10 +52,10 @@ class Post extends ObjectChoice {
 		}
 
 		// Set default query args.
-		$field['query_args'] = wp_parse_args( $field['query_args'], array(
+		$field['query_args'] = wp_parse_args( $field['query_args'], [
 			'post_status'    => 'publish',
 			'posts_per_page' => - 1,
-		) );
+		] );
 
 		return $field;
 	}
@@ -65,11 +66,11 @@ class Post extends ObjectChoice {
 	 * @return array
 	 */
 	public static function get_db_fields() {
-		return array(
+		return [
 			'parent' => 'post_parent',
 			'id'     => 'ID',
 			'label'  => 'post_title',
-		);
+		];
 	}
 
 	/**
@@ -93,11 +94,13 @@ class Post extends ObjectChoice {
 	 * Get options for walker.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function get_options( $field ) {
 		$query = new WP_Query( $field['query_args'] );
-		return $query->have_posts() ? $query->posts : array();
+
+		return $query->have_posts() ? $query->posts : [];
 	}
 
 	/**
@@ -112,10 +115,10 @@ class Post extends ObjectChoice {
 		return sprintf(
 			'<a href="%s" title="%s">%s</a>',
 			esc_url( get_permalink( $value ) ),
-			the_title_attribute( array(
+			the_title_attribute( [
 				'post' => $value,
 				'echo' => false,
-			) ),
+			] ),
 			get_the_title( $value )
 		);
 	}

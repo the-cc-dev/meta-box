@@ -16,6 +16,7 @@ class Checkbox extends Input {
 	 *
 	 * @param mixed $meta  Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
@@ -28,6 +29,7 @@ class Checkbox extends Input {
 		if ( $field['desc'] ) {
 			$output = "<label id='{$field['id']}_description' class='description'>$output {$field['desc']}</label>";
 		}
+
 		return $output;
 	}
 
@@ -35,6 +37,7 @@ class Checkbox extends Input {
 	 * Do not show field description.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function input_description( $field ) {

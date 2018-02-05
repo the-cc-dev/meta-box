@@ -17,7 +17,7 @@ class FieldRegistry {
 	 *
 	 * @var array
 	 */
-	private $data = array();
+	private $data = [];
 
 	/**
 	 * Add a single field to the registry.
@@ -32,10 +32,10 @@ class FieldRegistry {
 		}
 
 		if ( empty( $this->data[ $object_type ] ) ) {
-			$this->data[ $object_type ] = array();
+			$this->data[ $object_type ] = [];
 		}
 		if ( empty( $this->data[ $object_type ][ $type ] ) ) {
-			$this->data[ $object_type ][ $type ] = array();
+			$this->data[ $object_type ][ $type ] = [];
 		}
 		$this->data[ $object_type ][ $type ][ $field['id'] ] = $field;
 	}
@@ -61,6 +61,6 @@ class FieldRegistry {
 	 * @return array List of fields.
 	 */
 	public function get_by_object_type( $object_type = 'post' ) {
-		return isset( $this->data[ $object_type ] ) ? $this->data[ $object_type ] : array();
+		return isset( $this->data[ $object_type ] ) ? $this->data[ $object_type ] : [];
 	}
 }

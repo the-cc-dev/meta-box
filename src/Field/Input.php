@@ -16,10 +16,12 @@ abstract class Input extends Base {
 	 *
 	 * @param mixed $meta  Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		$attributes = self::call( 'get_attributes', $field, $meta );
+
 		return sprintf( '<input %s>%s', self::render_attributes( $attributes ), self::datalist( $field ) );
 	}
 
@@ -27,22 +29,24 @@ abstract class Input extends Base {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'autocomplete' => false,
 			'size'         => 30,
 			'datalist'     => false,
 			'readonly'     => false,
-		) );
+		] );
 		if ( $field['datalist'] ) {
-			$field['datalist'] = wp_parse_args( $field['datalist'], array(
+			$field['datalist'] = wp_parse_args( $field['datalist'], [
 				'id'      => $field['id'] . '_list',
-				'options' => array(),
-			) );
+				'options' => [],
+			] );
 		}
+
 		return $field;
 	}
 
@@ -51,11 +55,12 @@ abstract class Input extends Base {
 	 *
 	 * @param array $field Field parameters.
 	 * @param mixed $value Meta value.
+	 *
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
 		$attributes = parent::get_attributes( $field, $value );
-		$attributes = wp_parse_args( $attributes, array(
+		$attributes = wp_parse_args( $attributes, [
 			'autocomplete' => $field['autocomplete'],
 			'list'         => $field['datalist'] ? $field['datalist']['id'] : false,
 			'readonly'     => $field['readonly'],
@@ -63,7 +68,7 @@ abstract class Input extends Base {
 			'placeholder'  => $field['placeholder'],
 			'type'         => $field['type'],
 			'size'         => $field['size'],
-		) );
+		] );
 
 		return $attributes;
 	}
@@ -72,6 +77,7 @@ abstract class Input extends Base {
 	 * Create datalist, if any.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	protected static function datalist( $field ) {
@@ -85,6 +91,7 @@ abstract class Input extends Base {
 			$html .= sprintf( '<option value="%s"></option>', $option );
 		}
 		$html .= '</datalist>';
+
 		return $html;
 	}
 }

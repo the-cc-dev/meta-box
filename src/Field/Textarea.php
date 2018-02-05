@@ -14,13 +14,14 @@ class Textarea extends Base {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta Meta value.
+	 * @param mixed $meta  Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		$attributes = self::get_attributes( $field, $meta );
+
 		return sprintf(
 			'<textarea %s>%s</textarea>',
 			self::render_attributes( $attributes ),
@@ -32,6 +33,7 @@ class Textarea extends Base {
 	 * Escape meta for field output.
 	 *
 	 * @param mixed $meta Meta value.
+	 *
 	 * @return mixed
 	 */
 	public static function esc_meta( $meta ) {
@@ -42,18 +44,19 @@ class Textarea extends Base {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'autocomplete' => false,
 			'cols'         => 60,
 			'rows'         => 3,
 			'maxlength'    => false,
 			'wrap'         => false,
 			'readonly'     => false,
-		) );
+		] );
 
 		return $field;
 	}
@@ -67,8 +70,8 @@ class Textarea extends Base {
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
-		$attributes = parent::get_attributes( $field, $value );
-		$attributes = wp_parse_args( $attributes, array(
+		$attributes          = parent::get_attributes( $field, $value );
+		$attributes          = wp_parse_args( $attributes, [
 			'autocomplete' => $field['autocomplete'],
 			'cols'         => $field['cols'],
 			'rows'         => $field['rows'],
@@ -76,7 +79,7 @@ class Textarea extends Base {
 			'wrap'         => $field['wrap'],
 			'readonly'     => $field['readonly'],
 			'placeholder'  => $field['placeholder'],
-		) );
+		] );
 		$attributes['class'] .= ' large-text';
 
 		return $attributes;

@@ -16,10 +16,10 @@ class FileInput extends Input {
 	 */
 	public static function admin_enqueue_scripts() {
 		wp_enqueue_media();
-		wp_enqueue_script( 'rwmb-file-input', RWMB_JS_URL . 'file-input.js', array( 'jquery' ), RWMB_VER, true );
-		self::localize_script('rwmb-file-input', 'rwmbFileInput', array(
+		wp_enqueue_script( 'rwmb-file-input', RWMB_JS_URL . 'file-input.js', [ 'jquery' ], RWMB_VER, true );
+		self::localize_script( 'rwmb-file-input', 'rwmbFileInput', [
 			'frameTitle' => esc_html__( 'Select File', 'meta-box' ),
-		) );
+		] );
 	}
 
 	/**
@@ -32,6 +32,7 @@ class FileInput extends Input {
 	 */
 	public static function html( $meta, $field ) {
 		$attributes = self::get_attributes( $field, $meta );
+
 		return sprintf(
 			'<input %s>
 			<a href="#" class="rwmb-file-input-select button">%s</a>
@@ -48,10 +49,11 @@ class FileInput extends Input {
 	 *
 	 * @param array $field Field parameters.
 	 * @param mixed $value Meta value.
+	 *
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
-		$attributes = parent::get_attributes( $field, $value );
+		$attributes         = parent::get_attributes( $field, $value );
 		$attributes['type'] = 'text';
 
 		return $attributes;

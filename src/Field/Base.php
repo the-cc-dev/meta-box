@@ -31,8 +31,8 @@ abstract class Base {
 	 * @link https://github.com/rilwis/meta-box/issues/850
 	 *
 	 * @param string $handle Script handle.
-	 * @param string $name Object name.
-	 * @param mixed  $data Localized data.
+	 * @param string $name   Object name.
+	 * @param mixed  $data   Localized data.
 	 */
 	public static function localize_script( $handle, $name, $data ) {
 		/*
@@ -154,10 +154,12 @@ abstract class Base {
 	 * Display field label description.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	protected static function label_description( $field ) {
 		$id = $field['id'] ? ' id="' . esc_attr( $field['id'] ) . '-label-description"' : '';
+
 		return $field['label_description'] ? "<p{$id} class='description'>{$field['label_description']}</p>" : '';
 	}
 
@@ -165,10 +167,12 @@ abstract class Base {
 	 * Display field description.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	protected static function input_description( $field ) {
 		$id = $field['id'] ? ' id="' . esc_attr( $field['id'] ) . '-description"' : '';
+
 		return $field['desc'] ? "<p{$id} class='description'>{$field['desc']}</p>" : '';
 	}
 
@@ -181,7 +185,7 @@ abstract class Base {
 	 *
 	 * @return mixed
 	 */
-	public static function raw_meta( $object_id, $field, $args = array() ) {
+	public static function raw_meta( $object_id, $field, $args = [] ) {
 		if ( empty( $field['id'] ) ) {
 			return '';
 		}
@@ -247,7 +251,7 @@ abstract class Base {
 				 *
 				 * @see self::show()
 				 */
-				$meta = $field['clone'] ? array( '' ) : array();
+				$meta = $field['clone'] ? [ '' ] : [];
 			}
 		}
 
@@ -288,12 +292,13 @@ abstract class Base {
 	 * @param array $field   The field parameters.
 	 */
 	public static function save( $new, $old, $post_id, $field ) {
-		$name = $field['id'];
+		$name    = $field['id'];
 		$storage = $field['storage'];
 
 		// Remove post meta if it's empty.
-		if ( '' === $new || array() === $new ) {
+		if ( '' === $new || [] === $new ) {
 			$storage->delete( $post_id, $name );
+
 			return;
 		}
 
@@ -302,20 +307,21 @@ abstract class Base {
 			// Remove empty values.
 			$new = (array) $new;
 			foreach ( $new as $k => $v ) {
-				if ( '' === $v || array() === $v ) {
+				if ( '' === $v || [] === $v ) {
 					unset( $new[ $k ] );
 				}
 			}
 			// Reset indexes.
 			$new = array_values( $new );
 			$storage->update( $post_id, $name, $new );
+
 			return;
 		}
 
 		// If field is multiple, value is saved as multiple entries in the database (WordPress behaviour).
 		if ( $field['multiple'] ) {
-			$old = (array) $old;
-			$new = (array) $new;
+			$old        = (array) $old;
+			$new        = (array) $new;
 			$new_values = array_diff( $new, $old );
 			foreach ( $new_values as $new_value ) {
 				$storage->add( $post_id, $name, $new_value, false );
@@ -324,6 +330,7 @@ abstract class Base {
 			foreach ( $old_values as $old_value ) {
 				$storage->delete( $post_id, $name, $old_value );
 			}
+
 			return;
 		}
 
@@ -339,12 +346,12 @@ abstract class Base {
 	 * @return array
 	 */
 	public static function normalize( $field ) {
-		$field = wp_parse_args( $field, array(
+		$field = wp_parse_args( $field, [
 			'id'                => '',
 			'name'              => '',
 			'label_description' => '',
 			'multiple'          => false,
-			'default'               => '',
+			'default'           => '',
 			'desc'              => '',
 			'format'            => '',
 			'before'            => '',
@@ -362,14 +369,14 @@ abstract class Base {
 			'disabled'   => false,
 			'required'   => false,
 			'autofocus'  => false,
-			'attributes' => array(),
-		) );
+			'attributes' => [],
+		] );
 
 		if ( $field['clone_default'] ) {
-			$field['attributes'] = wp_parse_args( $field['attributes'], array(
+			$field['attributes'] = wp_parse_args( $field['attributes'], [
 				'data-default'       => $field['default'],
 				'data-clone-default' => 'true',
-			) );
+			] );
 		}
 
 		return $field;
@@ -384,16 +391,16 @@ abstract class Base {
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
-		$attributes = wp_parse_args( $field['attributes'], array(
+		$attributes = wp_parse_args( $field['attributes'], [
 			'disabled'  => $field['disabled'],
 			'autofocus' => $field['autofocus'],
 			'required'  => $field['required'],
 			'id'        => $field['id'],
 			'class'     => '',
 			'name'      => $field['field_name'],
-		) );
+		] );
 
-		$attributes['class'] = implode( ' ', array_merge( array( "rwmb-{$field['type']}" ), (array) $attributes['class'] ) );
+		$attributes['class'] = implode( ' ', array_merge( [ "rwmb-{$field['type']}" ], (array) $attributes['class'] ) );
 
 		return $attributes;
 	}
@@ -438,7 +445,7 @@ abstract class Base {
 	 *
 	 * @return mixed Field value
 	 */
-	public static function get_value( $field, $args = array(), $post_id = null ) {
+	public static function get_value( $field, $args = [], $post_id = null ) {
 		// Some fields does not have ID like heading, custom HTML, etc.
 		if ( empty( $field['id'] ) ) {
 			return '';
@@ -449,11 +456,11 @@ abstract class Base {
 		}
 
 		// Get raw meta value in the database, no escape.
-		$value  = self::call( $field, 'raw_meta', $post_id, $args );
+		$value = self::call( $field, 'raw_meta', $post_id, $args );
 
 		// Make sure meta value is an array for cloneable and multiple fields.
 		if ( $field['clone'] || $field['multiple'] ) {
-			$value = is_array( $value ) && $value ? $value : array();
+			$value = is_array( $value ) && $value ? $value : [];
 		}
 
 		return $value;
@@ -476,7 +483,7 @@ abstract class Base {
 	 *
 	 * @return string HTML output of the field
 	 */
-	public static function the_value( $field, $args = array(), $post_id = null ) {
+	public static function the_value( $field, $args = [], $post_id = null ) {
 		$value = self::call( 'get_value', $field, $args, $post_id );
 
 		if ( false === $value ) {
@@ -505,6 +512,7 @@ abstract class Base {
 			$output .= '<li>' . self::call( 'format_clone_value', $field, $clone, $args, $post_id ) . '</li>';
 		}
 		$output .= '</ul>';
+
 		return $output;
 	}
 
@@ -527,6 +535,7 @@ abstract class Base {
 			$output .= '<li>' . self::call( 'format_single_value', $field, $single, $args, $post_id ) . '</li>';
 		}
 		$output .= '</ul>';
+
 		return $output;
 	}
 
@@ -565,30 +574,31 @@ abstract class Base {
 
 			if ( 'raw_meta' === $method ) {
 				// Add field param after object id.
-				array_splice( $args, 1, 0, array( $field ) );
+				array_splice( $args, 1, 0, [ $field ] );
 			} else {
 				$args[] = $field; // Add field as last param.
 			}
 		}
 
-		return call_user_func_array( array( self::get_class_name( $field ), $method ), $args );
+		return call_user_func_array( [ self::get_class_name( $field ), $method ], $args );
 	}
 
 	/**
 	 * Map field types.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string Field mapped type.
 	 */
 	public static function map_types( $field ) {
-		$type = isset( $field['type'] ) ? $field['type'] : 'input';
+		$type     = isset( $field['type'] ) ? $field['type'] : 'input';
 		$type_map = apply_filters(
 			'rwmb_type_map',
-			array(
+			[
 				'file_advanced'  => 'media',
 				'plupload_image' => 'image_upload',
 				'url'            => 'text',
-			)
+			]
 		);
 
 		return isset( $type_map[ $type ] ) ? $type_map[ $type ] : $type;
@@ -598,13 +608,15 @@ abstract class Base {
 	 * Get field class name.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string Field class name.
 	 */
 	public static function get_class_name( $field ) {
-		$type = self::map_types( $field );
-		$type  = str_replace( array( '-', '_' ), ' ', $type );
+		$type  = self::map_types( $field );
+		$type  = str_replace( [ '-', '_' ], ' ', $type );
 		$class = 'RWMB_' . ucwords( $type ) . '_Field';
 		$class = str_replace( ' ', '_', $class );
+
 		return class_exists( $class ) ? $class : 'RWMB_Input_Field';
 	}
 
@@ -626,10 +638,10 @@ abstract class Base {
 		$field = array_shift( $args );
 
 		// List of filters.
-		$filters = array(
+		$filters = [
 			'rwmb_' . $name,
 			'rwmb_' . $field['type'] . '_' . $name,
-		);
+		];
 		if ( isset( $field['id'] ) ) {
 			$filters[] = 'rwmb_' . $field['id'] . '_' . $name;
 		}

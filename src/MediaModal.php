@@ -17,19 +17,19 @@ class MediaModal {
 	 *
 	 * @var array
 	 */
-	protected $fields = array();
+	protected $fields = [];
 
 	/**
 	 * Initialize.
 	 */
 	public function init() {
 		// Meta boxes are registered at priority 20, so we use 30 to capture them all.
-		add_action( 'init', array( $this, 'get_fields' ), 30 );
+		add_action( 'init', [ $this, 'get_fields' ], 30 );
 
-		add_filter( 'attachment_fields_to_edit', array( $this, 'add_fields' ), 11, 2 );
-		add_filter( 'attachment_fields_to_save', array( $this, 'save_fields' ), 11, 2 );
+		add_filter( 'attachment_fields_to_edit', [ $this, 'add_fields' ], 11, 2 );
+		add_filter( 'attachment_fields_to_save', [ $this, 'save_fields' ], 11, 2 );
 
-		add_filter( 'rwmb_show', array( $this, 'is_in_normal_mode' ), 10, 2 );
+		add_filter( 'rwmb_show', [ $this, 'is_in_normal_mode' ], 10, 2 );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class MediaModal {
 	 * Add fields to the attachment edit popup.
 	 *
 	 * @param array   $form_fields An array of attachment form fields.
-	 * @param WP_Post $post The WP_Post attachment object.
+	 * @param WP_Post $post        The WP_Post attachment object.
 	 *
 	 * @return mixed
 	 */
@@ -74,7 +74,7 @@ class MediaModal {
 	/**
 	 * Save custom fields.
 	 *
-	 * @param array $post An array of post data.
+	 * @param array $post       An array of post data.
 	 * @param array $attachment An array of attachment metadata.
 	 *
 	 * @return array

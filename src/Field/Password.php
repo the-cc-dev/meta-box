@@ -18,10 +18,12 @@ class Password extends Text {
 	 * @param mixed $old     The existing meta value.
 	 * @param int   $post_id The post ID.
 	 * @param array $field   The field parameters.
+	 *
 	 * @return string
 	 */
 	public static function value( $new, $old, $post_id, $field ) {
 		$new = $new !== $old ? wp_hash_password( $new ) : $new;
+
 		return $new;
 	}
 }

@@ -51,7 +51,7 @@ class MetaBox {
 	 * @param array $meta_box Meta box definition.
 	 */
 	public function __construct( $meta_box ) {
-		$meta_box = self::normalize( $meta_box );
+		$meta_box       = self::normalize( $meta_box );
 		$this->meta_box = $meta_box;
 
 		$storage = $this->get_storage();
@@ -101,7 +101,7 @@ class MetaBox {
 	 */
 	protected function global_hooks() {
 		// Enqueue common styles and scripts.
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ] );
 
 		// Add additional actions for fields.
 		foreach ( $this->fields as $field ) {
@@ -115,20 +115,20 @@ class MetaBox {
 	 */
 	protected function object_hooks() {
 		// Add meta box.
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
 
 		// Hide meta box if it's set 'default_hidden'.
-		add_filter( 'default_hidden_meta_boxes', array( $this, 'hide' ), 10, 2 );
+		add_filter( 'default_hidden_meta_boxes', [ $this, 'hide' ], 10, 2 );
 
 		// Save post meta.
 		foreach ( $this->post_types as $post_type ) {
 			if ( 'attachment' === $post_type ) {
 				// Attachment uses other hooks.
 				// @see wp_update_post(), wp_insert_attachment().
-				add_action( 'edit_attachment', array( $this, 'save_post' ) );
-				add_action( 'add_attachment', array( $this, 'save_post' ) );
+				add_action( 'edit_attachment', [ $this, 'save_post' ] );
+				add_action( 'add_attachment', [ $this, 'save_post' ] );
 			} else {
-				add_action( "save_post_{$post_type}", array( $this, 'save_post' ) );
+				add_action( "save_post_{$post_type}", [ $this, 'save_post' ] );
 			}
 		}
 	}
@@ -141,19 +141,19 @@ class MetaBox {
 			return;
 		}
 
-		wp_enqueue_style( 'rwmb', RWMB_CSS_URL . 'style.css', array(), RWMB_VER );
+		wp_enqueue_style( 'rwmb', RWMB_CSS_URL . 'style.css', [], RWMB_VER );
 		if ( is_rtl() ) {
-			wp_enqueue_style( 'rwmb-rtl', RWMB_CSS_URL . 'style-rtl.css', array(), RWMB_VER );
+			wp_enqueue_style( 'rwmb-rtl', RWMB_CSS_URL . 'style-rtl.css', [], RWMB_VER );
 		}
 
 		if ( 'seamless' === $this->style ) {
-			wp_enqueue_script( 'rwmb', RWMB_JS_URL . 'script.js', array( 'jquery' ), RWMB_VER, true );
+			wp_enqueue_script( 'rwmb', RWMB_JS_URL . 'script.js', [ 'jquery' ], RWMB_VER, true );
 		}
 
 		// Load clone script conditionally.
 		foreach ( $this->fields as $field ) {
 			if ( $field['clone'] ) {
-				wp_enqueue_script( 'rwmb-clone', RWMB_JS_URL . 'clone.js', array( 'jquery-ui-sortable' ), RWMB_VER, true );
+				wp_enqueue_script( 'rwmb-clone', RWMB_JS_URL . 'clone.js', [ 'jquery-ui-sortable' ], RWMB_VER, true );
 				break;
 			}
 		}
@@ -165,7 +165,7 @@ class MetaBox {
 
 		// Auto save.
 		if ( $this->autosave ) {
-			wp_enqueue_script( 'rwmb-autosave', RWMB_JS_URL . 'autosave.js', array( 'jquery' ), RWMB_VER, true );
+			wp_enqueue_script( 'rwmb-autosave', RWMB_JS_URL . 'autosave.js', [ 'jquery' ], RWMB_VER, true );
 		}
 
 		/**
@@ -184,7 +184,7 @@ class MetaBox {
 			add_meta_box(
 				$this->id,
 				$this->title,
-				array( $this, 'show' ),
+				[ $this, 'show' ],
 				$post_type,
 				$this->context,
 				$this->priority
@@ -286,7 +286,7 @@ class MetaBox {
 			$single = $field['clone'] || ! $field['multiple'];
 			$old    = RWMB_Field::call( $field, 'raw_meta', $post_id );
 			// @codingStandardsIgnoreLine
-			$new    = isset( $_POST[ $field['id'] ] ) ? $_POST[ $field['id'] ] : ( $single ? '' : array() );
+			$new = isset( $_POST[ $field['id'] ] ) ? $_POST[ $field['id'] ] : ( $single ? '' : [] );
 
 			// Allow field class change the value.
 			if ( $field['clone'] ) {
@@ -314,8 +314,8 @@ class MetaBox {
 		$nonce = filter_input( INPUT_POST, "nonce_{$this->id}", FILTER_SANITIZE_STRING );
 
 		return ! $this->saved
-			&& ( ! defined( 'DOING_AUTOSAVE' ) || $this->autosave )
-			&& wp_verify_nonce( $nonce, "rwmb-save-{$this->id}" );
+		       && ( ! defined( 'DOING_AUTOSAVE' ) || $this->autosave )
+		       && wp_verify_nonce( $nonce, "rwmb-save-{$this->id}" );
 	}
 
 	/**
@@ -327,7 +327,7 @@ class MetaBox {
 	 */
 	public static function normalize( $meta_box ) {
 		// Set default values for meta box.
-		$meta_box = wp_parse_args( $meta_box, array(
+		$meta_box = wp_parse_args( $meta_box, [
 			'id'             => sanitize_title( $meta_box['title'] ),
 			'context'        => 'normal',
 			'priority'       => 'high',
@@ -335,7 +335,7 @@ class MetaBox {
 			'autosave'       => false,
 			'default_hidden' => false,
 			'style'          => 'default',
-		) );
+		] );
 
 		/**
 		 * Use 'post_types' for better understanding and fallback to 'pages' for previous versions.
@@ -355,7 +355,7 @@ class MetaBox {
 	/**
 	 * Normalize an array of fields
 	 *
-	 * @param array                  $fields Array of fields.
+	 * @param array                  $fields  Array of fields.
 	 * @param RWMB_Storage_Interface $storage Storage object. Optional.
 	 *
 	 * @return array $fields Normalized fields.
@@ -394,7 +394,7 @@ class MetaBox {
 			$value = RWMB_Field::call( $field, 'raw_meta', $this->object_id );
 			if (
 				( ! $field['multiple'] && '' !== $value )
-				|| ( $field['multiple'] && array() !== $value )
+				|| ( $field['multiple'] && [] !== $value )
 			) {
 				return true;
 			}

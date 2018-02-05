@@ -16,14 +16,14 @@ class OEmbed extends Text {
 	 */
 	public static function admin_enqueue_scripts() {
 		wp_enqueue_style( 'rwmb-oembed', RWMB_CSS_URL . 'oembed.css' );
-		wp_enqueue_script( 'rwmb-oembed', RWMB_JS_URL . 'oembed.js', array( 'jquery', 'underscore' ), RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-oembed', RWMB_JS_URL . 'oembed.js', [ 'jquery', 'underscore' ], RWMB_VER, true );
 	}
 
 	/**
 	 * Add actions.
 	 */
 	public static function add_actions() {
-		add_action( 'wp_ajax_rwmb_get_embed', array( __CLASS__, 'wp_ajax_get_embed' ) );
+		add_action( 'wp_ajax_rwmb_get_embed', [ __CLASS__, 'wp_ajax_get_embed' ] );
 	}
 
 	/**
@@ -38,6 +38,7 @@ class OEmbed extends Text {
 	 * Get embed html from url.
 	 *
 	 * @param string $url URL.
+	 *
 	 * @return string
 	 */
 	public static function get_embed( $url ) {
@@ -50,7 +51,7 @@ class OEmbed extends Text {
 		 * @see  WP_Embed::shortcode()
 		 * @see  wp_embed_defaults()
 		 */
-		$args = array();
+		$args = [];
 		if ( is_admin() ) {
 			$args['width'] = 360;
 		}
@@ -71,14 +72,15 @@ class OEmbed extends Text {
 	 *
 	 * @param mixed $meta  Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		return parent::html( $meta, $field ) . sprintf(
-			'<span class="spinner"></span>
+				'<span class="spinner"></span>
 			<div class="rwmb-embed-media">%s</div>',
-			$meta ? self::get_embed( $meta ) : ''
-		);
+				$meta ? self::get_embed( $meta ) : ''
+			);
 	}
 
 	/**
@@ -90,8 +92,9 @@ class OEmbed extends Text {
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
-		$attributes = parent::get_attributes( $field, $value );
+		$attributes         = parent::get_attributes( $field, $value );
 		$attributes['type'] = 'url';
+
 		return $attributes;
 	}
 
