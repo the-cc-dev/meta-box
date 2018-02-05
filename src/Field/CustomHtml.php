@@ -1,0 +1,29 @@
+<?php
+/**
+ * The custom HTML field which allows users to output any kind of content to the meta box.
+ *
+ * @package Meta Box
+ */
+
+namespace MetaBox\Field;
+
+/**
+ * Custom HTML field class.
+ */
+class CustomHtml extends Base {
+	/**
+	 * Get field HTML.
+	 *
+	 * @param mixed $meta  Meta value.
+	 * @param array $field Field parameters.
+	 *
+	 * @return string
+	 */
+	public static function html( $meta, $field ) {
+		$html = ! empty( $field['default'] ) ? $field['default'] : '';
+		if ( ! empty( $field['callback'] ) && is_callable( $field['callback'] ) ) {
+			$html = call_user_func_array( $field['callback'], array( $meta, $field ) );
+		}
+		return $html;
+	}
+}

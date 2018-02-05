@@ -24,7 +24,11 @@
   ],
   "autoload": {
     "files": [
-      "meta-box.php"
-    ]
+      "meta-box.php",
+      "src/functions.php"
+    ],
+    "psr-4": {
+      "MetaBox\\": "src/"
+    }
   }
 }
