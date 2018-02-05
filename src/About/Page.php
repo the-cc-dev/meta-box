@@ -79,9 +79,9 @@ class Page {
 	public function render() {
 		?>
 		<div class="wrap about-wrap">
-			<?php include dirname( __FILE__ ) . '/sections/welcome.php'; ?>
-			<?php include dirname( __FILE__ ) . '/sections/tabs.php'; ?>
-			<?php include dirname( __FILE__ ) . '/sections/getting-started.php'; ?>
+			<?php include 'sections/welcome.php'; ?>
+			<?php include 'sections/tabs.php'; ?>
+			<?php include 'sections/getting-started.php'; ?>
 		</div>
 		<?php
 	}

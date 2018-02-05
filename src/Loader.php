@@ -22,7 +22,7 @@ class Loader {
 		// Script version, used to add version for scripts and styles.
 		define( 'RWMB_VER', '4.13.1' );
 
-		list( $path, $url ) = self::get_path( dirname( dirname( __FILE__ ) ) );
+		list( $path, $url ) = self::get_path( dirname( __DIR__ ) );
 
 		// Plugin URLs, for fast enqueuing scripts and styles.
 		define( 'RWMB_URL', $url );
