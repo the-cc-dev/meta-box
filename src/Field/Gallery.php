@@ -10,7 +10,7 @@ namespace MetaBox\Field;
 /**
  * Image advanced field class.
  */
-class ImageAdvanced extends Media {
+class Gallery extends Media {
 	/**
 	 * Enqueue scripts and styles.
 	 */

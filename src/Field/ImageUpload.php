@@ -10,7 +10,7 @@ namespace MetaBox\Field;
 /**
  * File advanced field class which users WordPress media popup to upload and select files.
  */
-class ImageUpload extends ImageAdvanced {
+class ImageUpload extends Gallery {
 	/**
 	 * Enqueue scripts and styles.
 	 */

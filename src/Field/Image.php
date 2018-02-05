@@ -1,6 +1,6 @@
 <?php
 /**
- * The image field which uploads images via HTML <input type="file">.
+ * The advanced image upload field which uses WordPress media popup to upload and select images.
  *
  * @package Meta Box
  */
@@ -8,114 +8,60 @@
 namespace MetaBox\Field;
 
 /**
- * Image field class which uses <input type="file"> to upload.
+ * Image advanced field class.
  */
-class Image extends File {
+class Image extends Gallery {
 	/**
-	 * Enqueue scripts and styles.
+	 * Normalize parameters for field.
+	 *
+	 * @param array $field Field parameters.
+	 *
+	 * @return array
 	 */
-	public static function admin_enqueue_scripts() {
-		parent::admin_enqueue_scripts();
-		wp_enqueue_media();
-		wp_enqueue_style( 'rwmb-image', RWMB_CSS_URL . 'image.css', [], RWMB_VER );
-	}
+	public static function normalize( $field ) {
+		$field['max_file_uploads'] = 1;
+		$field['max_status']       = false;
 
-	/**
-	 * Get HTML for uploaded file.
-	 *
-	 * @param int   $file  Attachment (file) ID.
-	 * @param int   $index File index.
-	 * @param array $field Field data.
-	 *
-	 * @return string
-	 */
-	protected static function file_html( $file, $index, $field ) {
-		$attributes = self::get_attributes( $field, $file );
+		$field = parent::normalize( $field );
 
-		return sprintf(
-			'<li class="rwmb-image-item attachment thumbnail">
-				<input type="hidden" name="%s[%s]" value="%s">
-				<div class="attachment-preview">
-					<div class="thumbnail">
-						<div class="centered">
-							%s
-						</div>
-					</div>
-				</div>
-				<div class="rwmb-image-overlay"></div>
-				<div class="rwmb-image-actions">
-					<a href="%s" class="rwmb-image-edit" target="_blank"><span class="dashicons dashicons-edit"></span></a>
-					<a href="#" class="rwmb-image-delete rwmb-file-delete" data-attachment_id="%s"><span class="dashicons dashicons-no-alt"></span></a>
-				</div>
-			</li>',
-			$attributes['name'], $index, $file,
-			wp_get_attachment_image( $file, 'thumbnail' ),
-			get_edit_post_link( $file ),
-			$file
-		);
-	}
-
-	/**
-	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
-	 *
-	 * @param array    $field   Field parameters.
-	 * @param array    $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param int|null $post_id Post ID. null for current post. Optional.
-	 *
-	 * @return string
-	 */
-	public static function format_single_value( $field, $value, $args, $post_id ) {
-		$output = sprintf( '<img src="%s" alt="%s">', esc_url( $value['url'] ), esc_attr( $value['alt'] ) );
-
-		// Link thumbnail to full size image?
-		if ( ! empty( $args['link'] ) ) {
-			$output = sprintf( '<a href="%s" title="%s">%s</a>', esc_url( $value['full_url'] ), esc_attr( $value['title'] ), $output );
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Get uploaded file information.
-	 *
-	 * @param int   $file Attachment image ID (post ID). Required.
-	 * @param array $args Array of arguments (for size).
-	 *
-	 * @return array|bool False if file not found. Array of image info on success.
-	 */
-	public static function file_info( $file, $args = [] ) {
-		$path = get_attached_file( $file );
-		if ( ! $path ) {
-			return false;
-		}
-
-		$args       = wp_parse_args( $args, [
-			'size' => 'thumbnail',
+		$field['attributes'] = wp_parse_args( $field['attributes'], [
+			'class'             => '',
+			'data-single-image' => 1,
 		] );
-		$image      = wp_get_attachment_image_src( $file, $args['size'] );
-		$attachment = get_post( $file );
-		$info       = [
-			'ID'          => $file,
-			'name'        => basename( $path ),
-			'path'        => $path,
-			'url'         => $image[0],
-			'full_url'    => wp_get_attachment_url( $file ),
-			'title'       => $attachment->post_title,
-			'caption'     => $attachment->post_excerpt,
-			'description' => $attachment->post_content,
-			'alt'         => get_post_meta( $file, '_wp_attachment_image_alt', true ),
-		];
-		if ( function_exists( 'wp_get_attachment_image_srcset' ) ) {
-			$info['srcset'] = wp_get_attachment_image_srcset( $file );
-		}
 
-		$info = wp_parse_args( $info, wp_get_attachment_metadata( $file ) );
+		$field['attributes']['class'] .= ' rwmb-image_advanced';
+		$field['multiple']            = false;
 
-		// Do not overwrite width and height by returned value of image meta.
-		$info['width']  = $image[1];
-		$info['height'] = $image[2];
+		return $field;
+	}
 
-		return $info;
+	/**
+	 * Get meta values to save.
+	 *
+	 * @param mixed $new     The submitted meta value.
+	 * @param mixed $old     The existing meta value.
+	 * @param int   $post_id The post ID.
+	 * @param array $field   The field parameters.
+	 *
+	 * @return array|mixed
+	 */
+	public static function value( $new, $old, $post_id, $field ) {
+		return $new;
+	}
+
+	/**
+	 * Get the field value. Return meaningful info of the files.
+	 *
+	 * @param  array    $field   Field parameters.
+	 * @param  array    $args    Not used for this field.
+	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 *
+	 * @return mixed Full info of uploaded files
+	 */
+	public static function get_value( $field, $args = [], $post_id = null ) {
+		$value  = Base::get_value( $field, $args, $post_id );
+		$return = Image::file_info( $value, $args );
+
+		return $return;
 	}
 }
