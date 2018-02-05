@@ -56,7 +56,7 @@ class RWMB_Media_Modal {
 			$form_field['label'] = $field['name'];
 			$form_field['input'] = 'html';
 
-			// Just ignore the field 'std' because there's no way to check it.
+			// Just ignore the field 'default' because there's no way to check it.
 			$meta                = RWMB_Field::call( $field, 'meta', $post->ID, true );
 			$form_field['value'] = $meta;
 

@@ -220,8 +220,8 @@ abstract class RWMB_Field {
 		// Get raw meta.
 		$meta = self::call( $field, 'raw_meta', $post_id );
 
-		// Use $field['std'] only when the meta box hasn't been saved (i.e. the first time we run).
-		$meta = ! $saved ? $field['std'] : $meta;
+		// Use $field['default'] only when the meta box hasn't been saved (i.e. the first time we run).
+		$meta = ! $saved ? $field['default'] : $meta;
 
 		// Ensure multiple fields are arrays.
 		if ( $field['multiple'] ) {
@@ -342,7 +342,7 @@ abstract class RWMB_Field {
 			'name'              => '',
 			'label_description' => '',
 			'multiple'          => false,
-			'std'               => '',
+			'default'               => '',
 			'desc'              => '',
 			'format'            => '',
 			'before'            => '',
@@ -365,7 +365,7 @@ abstract class RWMB_Field {
 
 		if ( $field['clone_default'] ) {
 			$field['attributes'] = wp_parse_args( $field['attributes'], array(
-				'data-default'       => $field['std'],
+				'data-default'       => $field['default'],
 				'data-clone-default' => 'true',
 			) );
 		}

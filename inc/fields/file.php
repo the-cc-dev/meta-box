@@ -257,7 +257,7 @@ class RWMB_File_Field extends RWMB_Field {
 	public static function normalize( $field ) {
 		$field             = parent::normalize( $field );
 		$field             = wp_parse_args( $field, array(
-			'std'              => array(),
+			'default'              => array(),
 			'force_delete'     => false,
 			'max_file_uploads' => 0,
 			'mime_type'        => '',

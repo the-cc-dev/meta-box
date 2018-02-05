@@ -18,7 +18,7 @@ class RWMB_Custom_Html_Field extends RWMB_Field {
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
-		$html = ! empty( $field['std'] ) ? $field['std'] : '';
+		$html = ! empty( $field['default'] ) ? $field['default'] : '';
 		if ( ! empty( $field['callback'] ) && is_callable( $field['callback'] ) ) {
 			$html = call_user_func_array( $field['callback'], array( $meta, $field ) );
 		}

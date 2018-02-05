@@ -55,7 +55,7 @@ class RWMB_Map_Field extends RWMB_Field {
 		$html .= sprintf(
 			'<div class="rwmb-map-canvas" data-default-loc="%s" data-region="%s"></div>
 			<input type="hidden" name="%s" class="rwmb-map-coordinate" value="%s">',
-			esc_attr( $field['std'] ),
+			esc_attr( $field['default'] ),
 			esc_attr( $field['region'] ),
 			esc_attr( $field['field_name'] ),
 			esc_attr( $meta )
@@ -83,7 +83,7 @@ class RWMB_Map_Field extends RWMB_Field {
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
 		$field = wp_parse_args( $field, array(
-			'std'           => '',
+			'default'           => '',
 			'address_field' => '',
 			'region'        => '',
 

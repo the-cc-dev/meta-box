@@ -18,7 +18,7 @@ class RWMB_Button_Field extends RWMB_Field {
 	 */
 	public static function html( $meta, $field ) {
 		$attributes = self::get_attributes( $field );
-		return sprintf( '<button %s>%s</button>', self::render_attributes( $attributes ), $field['std'] );
+		return sprintf( '<button %s>%s</button>', self::render_attributes( $attributes ), $field['default'] );
 	}
 
 	/**
@@ -29,7 +29,7 @@ class RWMB_Button_Field extends RWMB_Field {
 	 */
 	public static function normalize( $field ) {
 		$field = wp_parse_args( $field, array(
-			'std'      => __( 'Click me', 'meta-box' ),
+			'default'      => __( 'Click me', 'meta-box' ),
 		) );
 		$field = parent::normalize( $field );
 		return $field;
