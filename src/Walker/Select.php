@@ -7,6 +7,8 @@
 
 namespace MetaBox\Walker;
 
+use MetaBox\Field\Base as Field;
+
 /**
  * The select walker class.
  */
@@ -33,7 +35,7 @@ class Select extends Base {
 			esc_attr( $object->$id ),
 			selected( in_array( $object->$id, $meta ), true, false ),
 			$indent,
-			esc_html( RWMB_Field::filter( 'choice_label', $object->$label, $this->field, $object ) )
+			esc_html( Field::filter( 'choice_label', $object->$label, $this->field, $object ) )
 		);
 	}
 }

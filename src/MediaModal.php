@@ -59,11 +59,11 @@ class MediaModal {
 			$form_field['input'] = 'html';
 
 			// Just ignore the field 'default' because there's no way to check it.
-			$meta                = RWMB_Field::call( $field, 'meta', $post->ID, true );
+			$meta                = Field\Base::call( $field, 'meta', $post->ID, true );
 			$form_field['value'] = $meta;
 
 			$field['field_name'] = 'attachments[' . $post->ID . '][' . $field['field_name'] . ']';
-			$form_field['html']  = RWMB_Field::call( $field, 'html', $meta );
+			$form_field['html']  = Field\Base::call( $field, 'html', $meta );
 
 			$form_fields[ $field['id'] ] = $form_field;
 		}
@@ -83,20 +83,20 @@ class MediaModal {
 		foreach ( $this->fields as $field ) {
 			$key = $field['id'];
 
-			$old = RWMB_Field::call( $field, 'raw_meta', $post['ID'] );
+			$old = Field\Base::call( $field, 'raw_meta', $post['ID'] );
 			$new = isset( $attachment[ $key ] ) ? $attachment[ $key ] : '';
 
 			// Allow field class change the value.
 			if ( $field['clone'] ) {
-				$new = RWMB_Clone::value( $new, $old, $post['ID'], $field );
+				$new = Cloner::value( $new, $old, $post['ID'], $field );
 			} else {
-				$new = RWMB_Field::call( $field, 'value', $new, $old, $post['ID'] );
-				$new = RWMB_Field::filter( 'sanitize', $new, $field );
+				$new = Field\Base::call( $field, 'value', $new, $old, $post['ID'] );
+				$new = Field\Base::filter( 'sanitize', $new, $field );
 			}
-			$new = RWMB_Field::filter( 'value', $new, $field, $old );
+			$new = Field\Base::filter( 'value', $new, $field, $old );
 
 			// Call defined method to save meta value, if there's no methods, call common one.
-			RWMB_Field::call( $field, 'save', $new, $old, $post['ID'] );
+			Field\Base::call( $field, 'save', $new, $old, $post['ID'] );
 		}
 
 		return $post;

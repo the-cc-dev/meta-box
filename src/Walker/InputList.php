@@ -45,13 +45,13 @@ class InputList extends Base {
 	public function start_el( &$output, $object, $depth = 0, $args = [], $current_object_id = 0 ) {
 		$label      = $this->db_fields['label'];
 		$id         = $this->db_fields['id'];
-		$attributes = RWMB_Field::call( 'get_attributes', $this->field, $object->$id );
+		$attributes = Field\Base::call( 'get_attributes', $this->field, $object->$id );
 
 		$output .= sprintf(
 			'<li><label><input %s %s>%s</label>',
-			RWMB_Field::render_attributes( $attributes ),
+			Field\Base::render_attributes( $attributes ),
 			checked( in_array( $object->$id, $this->meta ), 1, false ),
-			RWMB_Field::filter( 'choice_label', $object->$label, $this->field, $object )
+			Field\Base::filter( 'choice_label', $object->$label, $this->field, $object )
 		);
 	}
 

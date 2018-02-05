@@ -105,7 +105,7 @@ class MetaBox {
 
 		// Add additional actions for fields.
 		foreach ( $this->fields as $field ) {
-			RWMB_Field::call( $field, 'add_actions' );
+			Field\Base::call( $field, 'add_actions' );
 		}
 	}
 
@@ -160,7 +160,7 @@ class MetaBox {
 
 		// Enqueue scripts and styles for fields.
 		foreach ( $this->fields as $field ) {
-			RWMB_Field::call( $field, 'admin_enqueue_scripts' );
+			Field\Base::call( $field, 'admin_enqueue_scripts' );
 		}
 
 		// Auto save.
@@ -232,7 +232,7 @@ class MetaBox {
 		do_action( "rwmb_before_{$this->id}", $this );
 
 		foreach ( $this->fields as $field ) {
-			RWMB_Field::call( 'show', $field, $saved, $this->object_id );
+			Field\Base::call( 'show', $field, $saved, $this->object_id );
 		}
 
 		// Allow users to add custom code after meta box content.
@@ -284,21 +284,21 @@ class MetaBox {
 	public function save_fields( $post_id, $fields ) {
 		foreach ( $fields as $field ) {
 			$single = $field['clone'] || ! $field['multiple'];
-			$old    = RWMB_Field::call( $field, 'raw_meta', $post_id );
+			$old    = Field\Base::call( $field, 'raw_meta', $post_id );
 			// @codingStandardsIgnoreLine
 			$new = isset( $_POST[ $field['id'] ] ) ? $_POST[ $field['id'] ] : ( $single ? '' : [] );
 
 			// Allow field class change the value.
 			if ( $field['clone'] ) {
-				$new = RWMB_Clone::value( $new, $old, $post_id, $field );
+				$new = Cloner::value( $new, $old, $post_id, $field );
 			} else {
-				$new = RWMB_Field::call( $field, 'value', $new, $old, $post_id );
-				$new = RWMB_Field::filter( 'sanitize', $new, $field );
+				$new = Field\Base::call( $field, 'value', $new, $old, $post_id );
+				$new = Field\Base::filter( 'sanitize', $new, $field );
 			}
-			$new = RWMB_Field::filter( 'value', $new, $field, $old );
+			$new = Field\Base::filter( 'value', $new, $field, $old );
 
 			// Call defined method to save meta value, if there's no methods, call common one.
-			RWMB_Field::call( $field, 'save', $new, $old, $post_id );
+			Field\Base::call( $field, 'save', $new, $old, $post_id );
 		}
 	}
 
@@ -362,7 +362,7 @@ class MetaBox {
 	 */
 	public static function normalize_fields( $fields, $storage = null ) {
 		foreach ( $fields as $k => $field ) {
-			$field = RWMB_Field::call( 'normalize', $field );
+			$field = Field\Base::call( 'normalize', $field );
 
 			// Allow to add default values for fields.
 			$field = apply_filters( 'rwmb_normalize_field', $field );
@@ -391,7 +391,7 @@ class MetaBox {
 			if ( empty( $field['id'] ) ) {
 				continue;
 			}
-			$value = RWMB_Field::call( $field, 'raw_meta', $this->object_id );
+			$value = Field\Base::call( $field, 'raw_meta', $this->object_id );
 			if (
 				( ! $field['multiple'] && '' !== $value )
 				|| ( $field['multiple'] && [] !== $value )

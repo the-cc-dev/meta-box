@@ -9,6 +9,8 @@
 
 namespace MetaBox\Field;
 
+use MetaBox\Cloner;
+
 /**
  * The field base class.
  */
@@ -63,7 +65,7 @@ abstract class Base {
 
 		// Separate code for cloneable and non-cloneable fields to make easy to maintain.
 		if ( $field['clone'] ) {
-			$field_html = RWMB_Clone::html( $meta, $field );
+			$field_html = Cloner::html( $meta, $field );
 		} else {
 			// Call separated methods for displaying each type of field.
 			$field_html = self::call( $field, 'html', $meta );
@@ -147,7 +149,7 @@ abstract class Base {
 	 * @return string
 	 */
 	public static function end_html( $meta, $field ) {
-		return RWMB_Clone::add_clone_button( $field ) . self::call( 'input_description', $field ) . '</div>';
+		return Cloner::add_clone_button( $field ) . self::call( 'input_description', $field ) . '</div>';
 	}
 
 	/**
@@ -612,12 +614,7 @@ abstract class Base {
 	 * @return string Field class name.
 	 */
 	public static function get_class_name( $field ) {
-		$type  = self::map_types( $field );
-		$type  = str_replace( [ '-', '_' ], ' ', $type );
-		$class = 'RWMB_' . ucwords( $type ) . '_Field';
-		$class = str_replace( ' ', '_', $class );
-
-		return class_exists( $class ) ? $class : 'RWMB_Input_Field';
+		return get_called_class();
 	}
 
 	/**

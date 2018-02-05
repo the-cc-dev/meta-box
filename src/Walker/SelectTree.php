@@ -7,6 +7,8 @@
 
 namespace MetaBox\Walker;
 
+use MetaBox\Field\Base as Field;
+
 /**
  * The select tree walker class.
  */
@@ -75,15 +77,15 @@ class SelectTree {
 	public function display_level( $options, $parent_id = 0, $active = false ) {
 		$id         = $this->db_fields['id'];
 		$field      = $this->field;
-		$walker     = new RWMB_Walker_Select( $this->db_fields, $field, $this->meta );
-		$attributes = RWMB_Field::call( 'get_attributes', $field, $this->meta );
+		$walker     = new Select( $this->db_fields, $field, $this->meta );
+		$attributes = Field::call( 'get_attributes', $field, $this->meta );
 
 		$children = $options[ $parent_id ];
 		$output   = sprintf(
 			'<div class="rwmb-select-tree %s" data-parent-id="%s"><select %s>',
 			$active ? '' : 'hidden',
 			$parent_id,
-			RWMB_Field::render_attributes( $attributes )
+			Field::render_attributes( $attributes )
 		);
 		$output   .= isset( $field['placeholder'] ) ? "<option value=''>{$field['placeholder']}</option>" : '<option></option>';
 		$output   .= $walker->walk( $children, - 1 );

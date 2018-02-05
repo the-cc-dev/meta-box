@@ -57,8 +57,8 @@ class Cloner {
 			$input_html = "<div class='$class'>" . $sort_icon;
 
 			// Call separated methods for displaying each type of field.
-			$input_html .= RWMB_Field::call( $sub_field, 'html', $sub_meta );
-			$input_html = RWMB_Field::filter( 'html', $input_html, $sub_field, $sub_meta );
+			$input_html .= Field\Base::call( $sub_field, 'html', $sub_meta );
+			$input_html = Field\Base::filter( 'html', $input_html, $sub_field, $sub_meta );
 
 			// Remove clone button.
 			$input_html .= self::remove_clone_button( $sub_field );
@@ -86,13 +86,13 @@ class Cloner {
 		}
 
 		if ( in_array( $field['type'], [ 'file', 'image' ], true ) ) {
-			return RWMB_Field::call( $field, 'value', $new, '', $post_id );
+			return Field\Base::call( $field, 'value', $new, '', $post_id );
 		}
 
 		foreach ( $new as $key => $value ) {
 			$old_value   = isset( $old[ $key ] ) ? $old[ $key ] : null;
-			$value       = RWMB_Field::call( $field, 'value', $value, $old_value, $post_id );
-			$new[ $key ] = RWMB_Field::filter( 'sanitize', $value, $field );
+			$value       = Field\Base::call( $field, 'value', $value, $old_value, $post_id );
+			$new[ $key ] = Field\Base::filter( 'sanitize', $value, $field );
 		}
 
 		return $new;
@@ -109,7 +109,7 @@ class Cloner {
 		if ( ! $field['clone'] ) {
 			return '';
 		}
-		$text = RWMB_Field::filter( 'add_clone_button_text', $field['add_button'], $field );
+		$text = Field\Base::filter( 'add_clone_button_text', $field['add_button'], $field );
 
 		return '<a href="#" class="rwmb-button button-primary add-clone">' . esc_html( $text ) . '</a>';
 	}
@@ -122,7 +122,7 @@ class Cloner {
 	 * @return string $html
 	 */
 	public static function remove_clone_button( $field ) {
-		$text = RWMB_Field::filter( 'remove_clone_button_text', '<i class="dashicons dashicons-minus"></i>', $field );
+		$text = Field\Base::filter( 'remove_clone_button_text', '<i class="dashicons dashicons-minus"></i>', $field );
 
 		return '<a href="#" class="rwmb-button remove-clone">' . $text . '</a>';
 	}

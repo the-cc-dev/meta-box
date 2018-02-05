@@ -97,9 +97,9 @@ if ( ! function_exists( 'rwmb_meta_legacy' ) ) {
 				$method = 'the_value';
 				break;
 		}
-		$field = RWMB_Field::call( 'normalize', $field );
+		$field = MetaBox\Field\Base::call( 'normalize', $field );
 
-		return RWMB_Field::call( $method, $field, $args, $post_id );
+		return MetaBox\Field\Base::call( $method, $field, $args, $post_id );
 	}
 } // End if().
 
@@ -119,7 +119,7 @@ if ( ! function_exists( 'rwmb_get_value' ) ) {
 		$field = rwmb_get_field_data( $field_id, $args, $post_id );
 
 		// Get field value.
-		$value = $field ? RWMB_Field::call( 'get_value', $field, $args, $post_id ) : false;
+		$value = $field ? MetaBox\Field\Base::call( 'get_value', $field, $args, $post_id ) : false;
 
 		/*
 		 * Allow developers to change the returned value of field.
@@ -155,7 +155,7 @@ if ( ! function_exists( 'rwmb_the_value' ) ) {
 			return '';
 		}
 
-		$output = RWMB_Field::call( 'the_value', $field, $args, $post_id );
+		$output = MetaBox\Field\Base::call( 'the_value', $field, $args, $post_id );
 
 		/*
 		 * Allow developers to change the returned value of field.
@@ -214,9 +214,7 @@ if ( ! function_exists( 'rwmb_get_registry' ) ) {
 	function rwmb_get_registry( $type ) {
 		static $data = [];
 
-		$type  = str_replace( [ '-', '_' ], ' ', $type );
-		$class = '\MetaBox\\' . ucwords( $type ) . 'Registry';
-		$class = str_replace( ' ', '', $class );
+		$class = '\MetaBox\\' . MetaBox\Helper::to_title_case( $type ) . 'Registry';
 		if ( ! isset( $data[ $type ] ) ) {
 			$data[ $type ] = new $class();
 		}
@@ -234,16 +232,13 @@ if ( ! function_exists( 'rwmb_get_storage_class_name' ) ) {
 	 * @return string
 	 */
 	function rwmb_get_storage_class_name( $object_type ) {
-		$object_type = str_replace( [ '-', '_' ], ' ', $object_type );
-		$object_type = ucwords( $object_type );
-		$object_type = str_replace( ' ', '_', $object_type );
-		$class_name  = 'RWMB_' . $object_type . '_Storage';
+		$class = '\MetaBox\\Storage\\' . MetaBox\Helper::to_title_case( $object_type );
 
-		if ( ! class_exists( $class_name ) ) {
-			$class_name = 'RWMB_Post_Storage';
+		if ( ! class_exists( $class ) ) {
+			$class = '\MetaBox\\Storage\\Post';
 		}
 
-		return apply_filters( 'rwmb_storage_class_name', $class_name, $object_type );
+		return apply_filters( 'rwmb_storage_class_name', $class, $object_type );
 	}
 }
 
@@ -251,10 +246,10 @@ if ( ! function_exists( 'rwmb_get_storage' ) ) {
 	/**
 	 * Get storage instance.
 	 *
-	 * @param string      $object_type Object type. Use post or term.
-	 * @param RW_Meta_Box $meta_box    Meta box object. Optional.
+	 * @param string          $object_type Object type. Use post or term.
+	 * @param MetaBox\MetaBox $meta_box    Meta box object. Optional.
 	 *
-	 * @return RWMB_Storage_Interface
+	 * @return MetaBox\Contract\Storage
 	 */
 	function rwmb_get_storage( $object_type, $meta_box = null ) {
 		$class_name = rwmb_get_storage_class_name( $object_type );
@@ -270,7 +265,7 @@ if ( ! function_exists( 'rwmb_get_meta_box' ) ) {
 	 *
 	 * @param  array $meta_box Array of meta box data.
 	 *
-	 * @return RW_Meta_Box
+	 * @return \MetaBox\MetaBox
 	 */
 	function rwmb_get_meta_box( $meta_box ) {
 		/**

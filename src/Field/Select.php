@@ -7,6 +7,8 @@
 
 namespace MetaBox\Field;
 
+use MetaBox\Walker\Select as Walker;
+
 /**
  * Select field class.
  */
@@ -31,7 +33,7 @@ class Select extends Choice {
 	 */
 	public static function walk( $field, $options, $db_fields, $meta ) {
 		$attributes = self::call( 'get_attributes', $field, $meta );
-		$walker     = new Walker_Select( $dbs, $field, $meta );
+		$walker     = new Walker( $db_fields, $field, $meta );
 		$output     = sprintf(
 			'<select %s>',
 			self::render_attributes( $attributes )
