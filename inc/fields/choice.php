@@ -34,7 +34,7 @@ abstract class RWMB_Choice_Field extends RWMB_Field {
 		$options   = self::call( 'get_options', $field );
 		$options   = self::call( 'filter_options', $field, $options );
 		$db_fields = self::call( 'get_db_fields', $field );
-		return ! empty( $options ) ? self::call( 'walk', $field, $options, $db_fields, $meta ) : null;
+		return self::call( 'walk', $field, $options, $db_fields, $meta );
 	}
 
 	/**

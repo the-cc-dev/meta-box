@@ -10,6 +10,28 @@
  */
 class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 	/**
+	 * Add field actions and filters.
+	 */
+	public static function add_actions() {
+		// Add callback for ajax data source.
+		add_action( 'wp_ajax_rwmb_select_advanced_callback', array( __CLASS__, 'ajax_callback' ) );
+		add_action( 'wp_ajax_nopriv_rwmb_select_advanced_callback', array( __CLASS__, 'ajax_callback' ) );
+	}
+
+	/**
+	 * Get data source from a ajax acllback.
+	 */
+	public static function ajax_callback() {
+		$callback = (string) filter_input( INPUT_GET, 'callback' );
+		if ( ! $callback ) {
+			die;
+		}
+		$data = call_user_func( $callback );
+		echo wp_json_encode( $data );
+		die;
+	}
+
+	/**
 	 * Enqueue scripts and styles.
 	 */
 	public static function admin_enqueue_scripts() {
@@ -41,8 +63,9 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 	 */
 	public static function normalize( $field ) {
 		$field = wp_parse_args( $field, array(
-			'js_options'  => array(),
-			'placeholder' => __( 'Select an item', 'meta-box' ),
+			'js_options'    => array(),
+			'placeholder'   => __( 'Select an item', 'meta-box' ),
+			'ajax_callback' => '',
 		) );
 
 		$field = parent::normalize( $field );
@@ -52,6 +75,15 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 			'width'       => 'none',
 			'placeholder' => $field['placeholder'],
 		) );
+
+		if ( $field['ajax_callback'] ) {
+			$ajax_params = array(
+				'url'      => admin_url( "admin-ajax.php?action=rwmb_select_advanced_callback&callback={$field['ajax_callback']}" ),
+				'dataType' => 'json',
+				'cache'    => true,
+			);
+			$field['js_options']['ajax'] = isset( $field['js_options']['ajax'] ) ? wp_parse_args( $field['js_options']['ajax'], $ajax_params ) : $ajax_params;
+		}
 
 		return $field;
 	}

@@ -35,8 +35,8 @@ class RWMB_Select_Field extends RWMB_Choice_Field {
 			'<select %s>',
 			self::render_attributes( $attributes )
 		);
-		if ( false === $field['multiple'] ) {
-			$output .= $field['placeholder'] ? '<option value="">' . esc_html( $field['placeholder'] ) . '</option>' : '';
+		if ( ! $field['multiple'] && $field['placeholder'] ) {
+			$output .= '<option value="">' . esc_html( $field['placeholder'] ) . '</option>';
 		}
 		$output .= $walker->walk( $options, $field['flatten'] ? - 1 : 0 );
 		$output .= '</select>';
