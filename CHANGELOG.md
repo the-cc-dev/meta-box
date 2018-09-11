@@ -5,15 +5,74 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
-## [4.19.11] - 2018-06-08
+## [4.15.5] - 2018-09-08
+
+### Fixed
+- Fixed saving `0` for switch/checkbox fields when they're off.
+- Fixed JS error while reordering image_advanced field images. #1265.
+- Fixed incompatibility with Custom Sidebars. #1269.
+
+### Changed
+- Added prefix `rwmb-` to `collapse` and `inline` CSS classes. Used for input list and button group fields.
+
+## [4.15.4] - 2018-08-24
+
+### Fixed
+- Fixed syntax error for sanitize switch field.
+
+## [4.15.3] - 2018-08-24
+
+### Fixed
+- Fixed `is_saved()` is wrong for cloneable `text_list` field.
+- Removed quotes for output of helper function for `background` field.
+- Saved value `0` for `switch` field when it's off.
+- Make validation works with `radio`/`checkbox_list`.
+- Fixed compatibility with PHP < 5.4 for `oembed` field.
+- Added missing style for OpenStreetMap (`osm`) field, just like Google Maps (`map`) field.
+- Fixed clone `wysiwyg` not active Visual mode by default.
+
+### Changed
+- Prevent fields `post`, `taxonomy`, `user` from making un-needed queries.
+- Optimized query for `user` field.
+- Removed extra query for other meta type than post when using helper functions.
+
+## [4.15.2] - 2018-08-03
+### Fixed
+- Fixed z-index for `switch` and `color` fields.
+- Fixed select All / None for checkbox list not working in groups.
+- Fixed select_tree type not working.
+
+## [4.15.1] - 2018-07-23
+### Fixed
+- Fixed rendering HTML in button groups.
+
+## [4.15.0] - 2018-07-20
+### Added
+- Added new `osm` field for Open Street Map. Google Maps requires developers to enter credit card details to keep using their free service, which is not always possible (and comfortable). The new `osm` field uses open source data from Open Street Map with the Leafleft library to render maps. It has the same settings as the Google Maps `map` field, including autocomplete feature, `language` and `region`.
+- Added new boolean field setting `save_field` for disabling the fields from saving to the database. Developers should handle the "save" action themselves.
+- Added `closed` parameter for meta box that collapses meta box on page load.
+- Allows users to change the "Embeded HTML not available" for oembed field or hide it with CSS:
+    - Added `not_available_string` setting to oembed field.
+    - Added `rwmb_not_available_string` filter for oembed field.
+    - Wrap "Not available" string in a div.
+
+### Changed
+- Object fields: optimized the "clone" functionality. No extra queries for clones.
+
+### Fixed
+- Fixed map field not working in cloneable groups.
+- Fixed warning when installed via WP-CLI. Props Arnaud Hallais.
+
+## [4.14.11] - 2018-06-08
 ### Fixed
 - Fixed styles for autocomplete address in map field in the frontend.
 
-## [4.19.10] - 2018-06-05
+## [4.14.10] - 2018-06-05
 ### Fixed
 - Fixed missing styles for `autocomplete` in the frontend.
 - Added the correct image size in returned value of 'srcset' for image field.
 - Fixed `select_advanced` field doesn't keep the same width when cloning.
+
 ### Changed
 - Improved the layout for `text_list` field.
 - Added MB User Profile and Meta Box - Beaver Themer Integrator. Removed ads for premium users.
@@ -843,7 +902,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## 1.0
 - procedural code
 
-[Unreleased]: https://github.com/rilwis/meta-box/compare/4.14.11...HEAD
+[Unreleased]: https://github.com/rilwis/meta-box/compare/4.15.5...HEAD
+[4.15.5]: https://github.com/rilwis/meta-box/compare/4.15.4...4.15.5
+[4.15.4]: https://github.com/rilwis/meta-box/compare/4.15.3...4.15.4
+[4.15.3]: https://github.com/rilwis/meta-box/compare/4.15.2...4.15.3
+[4.15.2]: https://github.com/rilwis/meta-box/compare/4.15.1...4.15.2
+[4.15.1]: https://github.com/rilwis/meta-box/compare/4.15.0...4.15.1
+[4.15.0]: https://github.com/rilwis/meta-box/compare/4.14.11...4.15.0
 [4.14.11]: https://github.com/rilwis/meta-box/compare/4.14.10...4.14.11
 [4.14.10]: https://github.com/rilwis/meta-box/compare/4.14.9...4.14.10
 [4.14.9]: https://github.com/rilwis/meta-box/compare/4.14.8...4.14.9
