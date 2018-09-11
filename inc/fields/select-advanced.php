@@ -16,10 +16,14 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 		// Add callback for ajax data source.
 		add_action( 'wp_ajax_rwmb_select_advanced_callback', array( __CLASS__, 'ajax_callback' ) );
 		add_action( 'wp_ajax_nopriv_rwmb_select_advanced_callback', array( __CLASS__, 'ajax_callback' ) );
+
+		// Add callback for initial load for selected items.
+		add_action( 'wp_ajax_rwmb_select_advanced_initial_callback', array( __CLASS__, 'ajax_initial_callback' ) );
+		add_action( 'wp_ajax_nopriv_rwmb_select_advanced_initial_callback', array( __CLASS__, 'ajax_initial_callback' ) );
 	}
 
 	/**
-	 * Get data source from a ajax acllback.
+	 * Get data source from a ajax callback.
 	 */
 	public static function ajax_callback() {
 		$callback = (string) filter_input( INPUT_GET, 'callback' );
@@ -27,6 +31,24 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 			die;
 		}
 		$data = call_user_func( $callback );
+		echo wp_json_encode( $data );
+		die;
+	}
+
+	/**
+	 * Get list of labels for selected items when initial load.
+	 */
+	public static function ajax_initial_callback() {
+		$callback = (string) filter_input( INPUT_GET, 'callback' );
+		if ( ! $callback ) {
+			die;
+		}
+		$selected = (string) filter_input( INPUT_GET, 'selected' );
+		if ( ! $selected ) {
+			die;
+		}
+		$selected = rwmb_csv_to_array( $selected );
+		$data = call_user_func( $callback, $selected );
 		echo wp_json_encode( $data );
 		die;
 	}
@@ -78,9 +100,16 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 
 		if ( $field['ajax_callback'] ) {
 			$ajax_params = array(
-				'url'      => admin_url( "admin-ajax.php?action=rwmb_select_advanced_callback&callback={$field['ajax_callback']}" ),
-				'dataType' => 'json',
-				'cache'    => true,
+				'url'        => add_query_arg( array(
+					'action'   => 'rwmb_select_advanced_callback',
+					'callback' => $field['ajax_callback'],
+				), admin_url( 'admin-ajax.php' ) ),
+				'initialUrl' => add_query_arg( array(
+					'action'   => 'rwmb_select_advanced_initial_callback',
+					'callback' => $field['ajax_initial_callback'],
+				), admin_url( 'admin-ajax.php' ) ),
+				'dataType'   => 'json',
+				'cache'      => true,
 			);
 			$field['js_options']['ajax'] = isset( $field['js_options']['ajax'] ) ? wp_parse_args( $field['js_options']['ajax'], $ajax_params ) : $ajax_params;
 		}
