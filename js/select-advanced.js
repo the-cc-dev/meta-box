@@ -31,11 +31,14 @@ jQuery( function ( $ ) {
 
 		// Set initial selected values.
 		if ( selected && options.hasOwnProperty( 'ajax' ) ) {
-			$.get( options.ajax.initialUrl + '&selected=' + selected, function( data ) {
+			var settings = options.ajax_initial;
+			settings.data = { selected: selected.toString() };
+			settings.success = function( data ) {
 				options.data = data;
 				$this.show().select2( options );
 				$this.val( selected ).trigger( 'change' );
-			}, 'json' );
+			};
+			$.ajax( settings );
 		} else {
 			$this.show().select2( options );
 		}

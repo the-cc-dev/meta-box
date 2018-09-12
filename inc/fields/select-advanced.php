@@ -47,6 +47,7 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 		if ( ! $selected ) {
 			die;
 		}
+
 		$selected = rwmb_csv_to_array( $selected );
 		$data = call_user_func( $callback, $selected );
 		echo wp_json_encode( $data );
@@ -98,21 +99,28 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 			'placeholder' => $field['placeholder'],
 		) );
 
-		if ( $field['ajax_callback'] ) {
-			$ajax_params = array(
-				'url'        => add_query_arg( array(
-					'action'   => 'rwmb_select_advanced_callback',
-					'callback' => $field['ajax_callback'],
-				), admin_url( 'admin-ajax.php' ) ),
-				'initialUrl' => add_query_arg( array(
-					'action'   => 'rwmb_select_advanced_initial_callback',
-					'callback' => $field['ajax_initial_callback'],
-				), admin_url( 'admin-ajax.php' ) ),
-				'dataType'   => 'json',
-				'cache'      => true,
-			);
-			$field['js_options']['ajax'] = isset( $field['js_options']['ajax'] ) ? wp_parse_args( $field['js_options']['ajax'], $ajax_params ) : $ajax_params;
+		if ( ! $field['ajax_callback'] ) {
+			return $field;
 		}
+
+		$ajax_params = array(
+			'url'      => add_query_arg( array(
+				'action'   => 'rwmb_select_advanced_callback',
+				'callback' => $field['ajax_callback'],
+			), admin_url( 'admin-ajax.php' ) ),
+			'dataType' => 'json',
+			'cache'    => true,
+		);
+		$ajax_initial_params = array(
+			'url'      => add_query_arg( array(
+				'action'   => 'rwmb_select_advanced_initial_callback',
+				'callback' => $field['ajax_initial_callback'],
+			), admin_url( 'admin-ajax.php' ) ),
+			'dataType' => 'json',
+			'cache'    => true,
+		);
+		$field['js_options']['ajax'] = isset( $field['js_options']['ajax'] ) ? wp_parse_args( $field['js_options']['ajax'], $ajax_params ) : $ajax_params;
+		$field['js_options']['ajax_initial'] = isset( $field['js_options']['ajax_initial'] ) ? wp_parse_args( $field['js_options']['ajax_initial'], $ajax_initial_params ) : $ajax_initial_params;
 
 		return $field;
 	}
