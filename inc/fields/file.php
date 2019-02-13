@@ -89,16 +89,35 @@ class RWMB_File_Field extends RWMB_Field {
 		$html      = self::get_uploaded_files( $meta, $field );
 
 		// Show form upload.
+		$attributes = self::call( 'get_attributes', $field, $meta );
 		$html .= sprintf(
 			'<div class="rwmb-file-new">
-				<input type="file" name="%s[]" class="rwmb-file-input">
+				<input %s>
 				<a class="rwmb-file-add" href="#"><strong>%s</strong></a>
 			</div>',
+			self::render_attributes( $attributes ),
 			$field['file_input_name'],
 			$i18n_more
 		);
 
 		return $html;
+	}
+
+	/**
+	 * Get the attributes for a field.
+	 *
+	 * @param array $field Field parameters.
+	 * @param mixed $value Meta value.
+	 *
+	 * @return array
+	 */
+	public static function get_attributes( $field, $value = null ) {
+		$attributes = parent::get_attributes( $field, $value );
+		$attributes['type'] = 'file';
+		$attributes['class'] = 'rwmb-file-input';
+		$attributes['name'] .= '[]';
+
+		return $attributes;
 	}
 
 	/**
